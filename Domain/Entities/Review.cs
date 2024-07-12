@@ -11,6 +11,6 @@ namespace Domain.Entities
         public Place Place { get; set; }
         public int Rating { get; set; }
         public string Comment { get; set; }
-        public DateTime ReviewDate { get; set; }
+        public DateTime ReviewDate { get; set; } = DateTime.Now;
     }
 }

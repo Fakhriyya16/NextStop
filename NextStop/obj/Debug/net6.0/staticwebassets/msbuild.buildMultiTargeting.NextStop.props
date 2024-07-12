@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\NextStop.props" />
+</Project>

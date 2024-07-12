@@ -15,8 +15,10 @@ namespace Domain.Entities
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public ICollection<Review> Reviews { get; set; }
-        public int ItineraryDayId { get; set; }
+        public int? ItineraryDayId { get; set; }
         public ItineraryDay ItineraryDay { get; set; }
         public ICollection<PlaceTag> PlaceTags { get; set; }
+        public decimal? Price { get; set; }
+        public int? Sale { get; set; }
     }
 }

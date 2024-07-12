@@ -1,12 +1,15 @@
 ﻿
+using Microsoft.AspNetCore.Identity;
+
 namespace Domain.Entities
 {
-    public class AppUser
+    public class AppUser : IdentityUser
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
         public ICollection<Review> Reviews { get; set; }
         public ICollection<Itinerary> Itineraries { get; set; }
+        public int SubscriptionId { get; set; }
         public Subscription Subscription { get; set; }
     }
 }

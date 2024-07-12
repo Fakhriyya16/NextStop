@@ -1,5 +1,7 @@
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using Repository.Data;
 using Service.Configurations;
+using Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(Configuration.GetConnectionString("Default")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddRepositoryLayer();
 
 var app = builder.Build();
 
