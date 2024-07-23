@@ -5,8 +5,9 @@ namespace Domain.Entities
 {
     public class PlaceImage : BaseEntity
     {
-        public int AttractionId { get; set; }
-        public Place Attraction { get; set; }
+        public int PlaceId { get; set; }
+        public Place Place { get; set; }
         public string ImageUrl { get; set; }
+        public string PublicId { get; set; }
     }
 }

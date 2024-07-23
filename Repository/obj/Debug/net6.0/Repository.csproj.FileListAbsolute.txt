@@ -1,4 +1,5 @@
 D:\VS\NextStop\Repository\bin\Debug\net6.0\Repository.deps.json
+D:\VS\NextStop\Repository\bin\Debug\net6.0\Repository.runtimeconfig.json
 D:\VS\NextStop\Repository\bin\Debug\net6.0\Repository.dll
 D:\VS\NextStop\Repository\bin\Debug\net6.0\Repository.pdb
 D:\VS\NextStop\Repository\bin\Debug\net6.0\Domain.dll
@@ -13,6 +14,5 @@ D:\VS\NextStop\Repository\obj\Debug\net6.0\Repository.csproj.CopyComplete
 D:\VS\NextStop\Repository\obj\Debug\net6.0\Repository.dll
 D:\VS\NextStop\Repository\obj\Debug\net6.0\refint\Repository.dll
 D:\VS\NextStop\Repository\obj\Debug\net6.0\Repository.pdb
-D:\VS\NextStop\Repository\obj\Debug\net6.0\ref\Repository.dll
-D:\VS\NextStop\Repository\bin\Debug\net6.0\Repository.runtimeconfig.json
 D:\VS\NextStop\Repository\obj\Debug\net6.0\Repository.genruntimeconfig.cache
+D:\VS\NextStop\Repository\obj\Debug\net6.0\ref\Repository.dll

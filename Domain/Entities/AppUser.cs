@@ -11,5 +11,7 @@ namespace Domain.Entities
         public ICollection<Itinerary> Itineraries { get; set; }
         public int SubscriptionId { get; set; }
         public Subscription Subscription { get; set; }
+        public ICollection<Blog> Blogs { get; set; }
+        public ICollection<Favorite> Favorites { get; set; }
     }
 }

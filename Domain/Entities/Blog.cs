@@ -11,5 +11,6 @@ namespace Domain.Entities
         public int AppUserId { get; set; }
         public AppUser AppUser { get; set; }
         public ICollection<BlogTag> BlogTags { get; set; }
+        public ICollection<BlogImage> BlogImages { get; set; }
     }
 }

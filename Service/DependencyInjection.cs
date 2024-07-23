@@ -1,0 +1,48 @@
+﻿
+using CloudinaryDotNet;
+using FluentValidation;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Service.Configurations;
+using Service.DTOs.Cities;
+using Service.Helpers;
+using Service.Interfaces;
+using System.Security.Principal;
+
+namespace Service
+{
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddServiceLayer(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddAutoMapper(typeof(MappingProfile).Assembly);
+
+            services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<ICityService, CityService>();
+            services.AddScoped<ICloudManagement, CloudManagement>();
+
+            services.AddValidatorsFromAssemblyContaining<CityCreateDtoValidator>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+            });
+
+            services.Configure<CloudinarySettings>(configuration.GetSection("Cloudinary"));
+
+            var cloudinarySettings = configuration.GetSection("Cloudinary").Get<CloudinarySettings>();
+            var account = new Account(cloudinarySettings.CloudName, cloudinarySettings.ApiKey, cloudinarySettings.ApiSecret);
+            var cloudinary = new Cloudinary(account);
+
+            services.AddSingleton(cloudinary);
+
+            return services;
+        }
+    }
+}

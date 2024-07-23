@@ -26,10 +26,15 @@ namespace Repository.Data
         public DbSet<PlaceTag> PlaceTag { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<Favorite> Favorites { get; set; }
+        public DbSet<BlogImage> BlogImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            builder.Entity<Country>().HasQueryFilter(m => !m.SoftDelete);
+            builder.Entity<City>().HasQueryFilter(m => !m.SoftDelete);
 
             base.OnModelCreating(builder);
         }

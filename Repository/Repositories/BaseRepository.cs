@@ -26,7 +26,8 @@ namespace Repository.Repositories
 
         public async Task DeleteAsync(T entity)
         {
-            _entities.Remove(entity);
+            entity.SoftDelete = true;
+            _entities.Update(entity);
             await _context.SaveChangesAsync();
         }
 

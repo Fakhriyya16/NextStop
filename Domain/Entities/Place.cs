@@ -20,5 +20,6 @@ namespace Domain.Entities
         public ICollection<PlaceTag> PlaceTags { get; set; }
         public decimal? Price { get; set; }
         public int? Sale { get; set; }
+        public ICollection<Favorite> Favorites { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 D:\VS\NextStop\Domain\bin\Debug\net6.0\Domain.deps.json
+D:\VS\NextStop\Domain\bin\Debug\net6.0\Domain.runtimeconfig.json
 D:\VS\NextStop\Domain\bin\Debug\net6.0\Domain.dll
 D:\VS\NextStop\Domain\bin\Debug\net6.0\Domain.pdb
 D:\VS\NextStop\Domain\obj\Debug\net6.0\Domain.csproj.AssemblyReference.cache
@@ -10,4 +11,5 @@ D:\VS\NextStop\Domain\obj\Debug\net6.0\Domain.sourcelink.json
 D:\VS\NextStop\Domain\obj\Debug\net6.0\Domain.dll
 D:\VS\NextStop\Domain\obj\Debug\net6.0\refint\Domain.dll
 D:\VS\NextStop\Domain\obj\Debug\net6.0\Domain.pdb
+D:\VS\NextStop\Domain\obj\Debug\net6.0\Domain.genruntimeconfig.cache
 D:\VS\NextStop\Domain\obj\Debug\net6.0\ref\Domain.dll

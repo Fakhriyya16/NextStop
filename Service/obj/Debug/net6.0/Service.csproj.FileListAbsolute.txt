@@ -1,4 +1,5 @@
 D:\VS\NextStop\Service\bin\Debug\net6.0\Service.deps.json
+D:\VS\NextStop\Service\bin\Debug\net6.0\Service.runtimeconfig.json
 D:\VS\NextStop\Service\bin\Debug\net6.0\Service.dll
 D:\VS\NextStop\Service\bin\Debug\net6.0\Service.pdb
 D:\VS\NextStop\Service\bin\Debug\net6.0\Domain.dll
@@ -15,4 +16,5 @@ D:\VS\NextStop\Service\obj\Debug\net6.0\Service.csproj.CopyComplete
 D:\VS\NextStop\Service\obj\Debug\net6.0\Service.dll
 D:\VS\NextStop\Service\obj\Debug\net6.0\refint\Service.dll
 D:\VS\NextStop\Service\obj\Debug\net6.0\Service.pdb
+D:\VS\NextStop\Service\obj\Debug\net6.0\Service.genruntimeconfig.cache
 D:\VS\NextStop\Service\obj\Debug\net6.0\ref\Service.dll

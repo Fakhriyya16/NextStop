@@ -139,6 +139,38 @@ namespace Repository.Migrations
                     b.ToTable("Blogs");
                 });
 
+            modelBuilder.Entity("Domain.Entities.BlogImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("SoftDelete")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("BlogImages");
+                });
+
             modelBuilder.Entity("Domain.Entities.BlogTag", b =>
                 {
                     b.Property<int>("Id")
@@ -217,6 +249,10 @@ namespace Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("SoftDelete")
                         .HasColumnType("bit");
 
@@ -248,6 +284,38 @@ namespace Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Countries");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Favorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppUserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("SoftDelete")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId1");
+
+                    b.HasIndex("PlaceId");
+
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("Domain.Entities.Itinerary", b =>
@@ -412,13 +480,17 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AttractionId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PublicId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -427,7 +499,7 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AttractionId");
+                    b.HasIndex("PlaceId");
 
                     b.ToTable("PlaceImages");
                 });
@@ -708,10 +780,21 @@ namespace Repository.Migrations
             modelBuilder.Entity("Domain.Entities.Blog", b =>
                 {
                     b.HasOne("Domain.Entities.AppUser", "AppUser")
-                        .WithMany()
+                        .WithMany("Blogs")
                         .HasForeignKey("AppUserId1");
 
                     b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("Domain.Entities.BlogImage", b =>
+                {
+                    b.HasOne("Domain.Entities.Blog", "Blog")
+                        .WithMany("BlogImages")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Blog");
                 });
 
             modelBuilder.Entity("Domain.Entities.BlogTag", b =>
@@ -742,6 +825,23 @@ namespace Repository.Migrations
                         .IsRequired();
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Favorite", b =>
+                {
+                    b.HasOne("Domain.Entities.AppUser", "AppUser")
+                        .WithMany("Favorites")
+                        .HasForeignKey("AppUserId1");
+
+                    b.HasOne("Domain.Entities.Place", "Place")
+                        .WithMany("Favorites")
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Place");
                 });
 
             modelBuilder.Entity("Domain.Entities.Itinerary", b =>
@@ -800,13 +900,13 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Domain.Entities.PlaceImage", b =>
                 {
-                    b.HasOne("Domain.Entities.Place", "Attraction")
+                    b.HasOne("Domain.Entities.Place", "Place")
                         .WithMany("Images")
-                        .HasForeignKey("AttractionId")
+                        .HasForeignKey("PlaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Attraction");
+                    b.Navigation("Place");
                 });
 
             modelBuilder.Entity("Domain.Entities.PlaceTag", b =>
@@ -898,6 +998,10 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppUser", b =>
                 {
+                    b.Navigation("Blogs");
+
+                    b.Navigation("Favorites");
+
                     b.Navigation("Itineraries");
 
                     b.Navigation("Reviews");
@@ -905,6 +1009,8 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Domain.Entities.Blog", b =>
                 {
+                    b.Navigation("BlogImages");
+
                     b.Navigation("BlogTags");
                 });
 
@@ -935,6 +1041,8 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Domain.Entities.Place", b =>
                 {
+                    b.Navigation("Favorites");
+
                     b.Navigation("Images");
 
                     b.Navigation("PlaceTags");
