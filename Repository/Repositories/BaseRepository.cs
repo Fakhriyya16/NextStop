@@ -51,7 +51,7 @@ namespace Repository.Repositories
                 query = query.Include(includeProperty);
             }
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         public async Task<T> GetById(int id)

@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Repository.Data;
 using Repository.Repositories.Interfaces;
 using System;
@@ -13,6 +14,11 @@ namespace Repository.Repositories
     {
         public TagRepository(AppDbContext context) : base(context)
         {
+        }
+
+        public async Task<bool> IsExist(string name)
+        {
+            return await _entities.AnyAsync(e => e.Name == name);
         }
     }
 }

@@ -35,6 +35,9 @@ namespace Repository.Data
 
             builder.Entity<Country>().HasQueryFilter(m => !m.SoftDelete);
             builder.Entity<City>().HasQueryFilter(m => !m.SoftDelete);
+            builder.Entity<Category>().HasQueryFilter(m => !m.SoftDelete);
+            builder.Entity<Tag>().HasQueryFilter(m => !m.SoftDelete);
+
 
             base.OnModelCreating(builder);
         }

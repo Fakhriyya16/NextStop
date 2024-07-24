@@ -20,6 +20,8 @@ namespace Service
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<ICloudManagement, CloudManagement>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ITagService, TagService>();
 
             services.AddValidatorsFromAssemblyContaining<CityCreateDtoValidator>();
 

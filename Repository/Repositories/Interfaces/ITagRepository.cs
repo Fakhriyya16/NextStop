@@ -9,5 +9,6 @@ namespace Repository.Repositories.Interfaces
 {
     public interface ITagRepository : IBaseRepository<Tag>
     {
+        Task<bool> IsExist(string name);
     }
 }

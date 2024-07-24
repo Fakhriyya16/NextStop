@@ -33,6 +33,8 @@ namespace Service
             {
                 throw new NotFoundException("Country was not found");
             }
+
+            if (await _cityRepository.IsExist(model.Name)) throw new EntityExistsException("City");
             
             if (!model.Image.IsImage()) throw new InvalidImageFormatException("The file is not a valid image or is empty.");
 
