@@ -7,7 +7,6 @@ using Service.Configurations;
 using Service.DTOs.Cities;
 using Service.Helpers;
 using Service.Interfaces;
-using System.Security.Principal;
 
 namespace Service
 {
@@ -15,6 +14,7 @@ namespace Service
     {
         public static IServiceCollection AddServiceLayer(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHttpClient();
             services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
             services.AddScoped<ICountryService, CountryService>();
@@ -22,6 +22,8 @@ namespace Service
             services.AddScoped<ICloudManagement, CloudManagement>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IPlaceService, PlaceService>();
+            services.AddScoped<IGeolocationService, GeolocationService>();
 
             services.AddValidatorsFromAssemblyContaining<CityCreateDtoValidator>();
 
@@ -37,6 +39,7 @@ namespace Service
             });
 
             services.Configure<CloudinarySettings>(configuration.GetSection("Cloudinary"));
+
 
             var cloudinarySettings = configuration.GetSection("Cloudinary").Get<CloudinarySettings>();
             var account = new Account(cloudinarySettings.CloudName, cloudinarySettings.ApiKey, cloudinarySettings.ApiSecret);

@@ -16,7 +16,8 @@ namespace NextStop.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _cityService.GetAllAsync());
+            var cities = await _cityService.GetAllAsync();
+            return Ok(cities);
         }
 
         [HttpGet("{id}")]

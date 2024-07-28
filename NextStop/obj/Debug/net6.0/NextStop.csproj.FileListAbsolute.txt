@@ -92,3 +92,6 @@ D:\VS\NextStop\NextStop\obj\Debug\net6.0\refint\NextStop.dll
 D:\VS\NextStop\NextStop\obj\Debug\net6.0\NextStop.pdb
 D:\VS\NextStop\NextStop\obj\Debug\net6.0\NextStop.genruntimeconfig.cache
 D:\VS\NextStop\NextStop\obj\Debug\net6.0\ref\NextStop.dll
+D:\VS\NextStop\NextStop\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\VS\NextStop\NextStop\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\VS\NextStop\NextStop\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll

@@ -12,14 +12,12 @@ namespace Domain.Entities
         public Category Category { get; set; }
         public string Description { get; set; }
         public ICollection<PlaceImage> Images { get; set; }
-        public decimal Latitude { get; set; }
-        public decimal Longitude { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
         public ICollection<Review> Reviews { get; set; }
         public int? ItineraryDayId { get; set; }
         public ItineraryDay ItineraryDay { get; set; }
         public ICollection<PlaceTag> PlaceTags { get; set; }
-        public decimal? Price { get; set; }
-        public int? Sale { get; set; }
         public ICollection<Favorite> Favorites { get; set; }
     }
 }

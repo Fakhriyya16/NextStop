@@ -21,7 +21,7 @@ namespace Service
 
         public async Task CreateAsync(CountryCreateDto model)
         {
-            if (await _countryRepository.FindByName(model.Name) is null) throw new EntityExistsException("Country");
+            if (await _countryRepository.FindByName(model.Name) is not null) throw new EntityExistsException("Country");
 
             await _countryRepository.CreateAsync(_mapper.Map<Country>(model));
         }

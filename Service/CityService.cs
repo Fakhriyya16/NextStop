@@ -46,11 +46,12 @@ namespace Service
             {
                 var result = await _cloudManagement.UploadImageWithPublicIdAsync(imageStream,fileName);
 
-                City newCity = new City();
-
-                newCity.CountryId = country.Id;
-                newCity.PublicId = result.PublicId;
-                newCity.ImageUrl = result.Url;
+                City newCity = new()
+                {
+                    CountryId = country.Id,
+                    PublicId = result.PublicId,
+                    ImageUrl = result.Url
+                };
 
                 _mapper.Map(model, newCity);
 
@@ -111,7 +112,8 @@ namespace Service
 
         public async Task<IEnumerable<CityDto>> GetAllAsync()
         {
-            return _mapper.Map<IEnumerable<CityDto>>(await _cityRepository.GetAllWithIncludes(m => m.Places));
+            var cities = await _cityRepository.GetAllWithIncludes(m => m.Places,m=>m.Country);
+            return _mapper.Map<IEnumerable<CityDto>>(cities);
         }
 
         public async Task<CityDto> GetByIdAsync(int id)

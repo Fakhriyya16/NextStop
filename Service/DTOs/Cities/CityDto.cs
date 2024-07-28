@@ -11,6 +11,6 @@ namespace Service.DTOs.Cities
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public string PublicId { get; set; }
-        public ICollection<Place> Places { get; set; }
+        public List<string> Places { get; set; }
     }
 }

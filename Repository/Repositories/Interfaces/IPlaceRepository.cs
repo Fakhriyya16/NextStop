@@ -9,5 +9,6 @@ namespace Repository.Repositories.Interfaces
 {
     public interface IPlaceRepository : IBaseRepository<Place>
     {
+        Task<bool> IsExist(string name);
     }
 }
