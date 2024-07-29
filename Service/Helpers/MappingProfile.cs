@@ -1,6 +1,7 @@
 ﻿
 using AutoMapper;
 using Domain.Entities;
+using Service.DTOs.Accounts;
 using Service.DTOs.Categories;
 using Service.DTOs.Cities;
 using Service.DTOs.Countries;
@@ -40,6 +41,9 @@ namespace Service.Helpers
                                         .ForMember(dest => dest.Reviews, opt => opt.MapFrom(m => m.Reviews.Select(r => r.Comment).ToList()))
                                         .ForMember(dest => dest.Images, opt => opt.MapFrom(m => m.Images.Select(i => i.ImageUrl).ToList()))
                                         .ForMember(dest => dest.Tags, opt => opt.MapFrom(m => m.PlaceTags.Select(pt => pt.Tag.Name).ToList()));
+
+            CreateMap<RegisterDto, AppUser>();
+            CreateMap<LoginDto, AppUser>();
         }
     }
 }
