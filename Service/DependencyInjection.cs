@@ -4,6 +4,7 @@ using Domain.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ namespace Service
         public static IServiceCollection AddServiceLayer(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHttpClient();
+            services.AddHttpContextAccessor();
             services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
             services.AddScoped<ICountryService, CountryService>();
@@ -34,6 +36,7 @@ namespace Service
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ISendEmail, SendEmail>();
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
 
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
 

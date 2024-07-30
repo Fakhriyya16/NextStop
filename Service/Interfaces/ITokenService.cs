@@ -5,6 +5,6 @@ namespace Service.Interfaces
 {
     public interface ITokenService
     {
-        string GetToken(AppUser user,List<string> roles);
+        string GetToken(AppUser user,IList<string> roles);
     }
 }

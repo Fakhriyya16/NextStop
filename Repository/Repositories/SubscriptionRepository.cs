@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Repository.Data;
 using Repository.Repositories.Interfaces;
 using System;
@@ -13,6 +14,11 @@ namespace Repository.Repositories
     {
         public SubscriptionRepository(AppDbContext context) : base(context)
         {
+        }
+
+        public async Task<Subscription> GetByUserId(string userId)
+        {
+            return await _entities.FirstOrDefaultAsync(m => m.AppUserId == userId);
         }
     }
 }

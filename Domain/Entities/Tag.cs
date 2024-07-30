@@ -1,5 +1,6 @@
 ﻿
 using Domain.Common;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Domain.Entities
 {

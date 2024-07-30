@@ -8,7 +8,7 @@ namespace Domain.Entities
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime PublishDate { get; set; } = DateTime.Now;
-        public int AppUserId { get; set; }
+        public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }
         public ICollection<BlogTag> BlogTags { get; set; }
         public ICollection<BlogImage> BlogImages { get; set; }

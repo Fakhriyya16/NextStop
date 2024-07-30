@@ -1,5 +1,6 @@
 ﻿
 using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Service.Configurations;
@@ -32,7 +33,7 @@ namespace Service
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync(_emailSettings.Host, _emailSettings.Port, _emailSettings.UseSsl);
+                await client.ConnectAsync(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.StartTls);
                 await client.AuthenticateAsync(_emailSettings.UserName, _emailSettings.Password);
                 await client.SendAsync(emailMessage);
                 await client.DisconnectAsync(true);

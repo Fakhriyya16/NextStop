@@ -71,9 +71,6 @@ namespace Repository.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubscriptionId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -95,9 +92,6 @@ namespace Repository.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("SubscriptionId")
-                        .IsUnique();
-
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
@@ -109,10 +103,8 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AppUserId1")
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Content")
@@ -134,7 +126,7 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId1");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Blogs");
                 });
@@ -294,10 +286,8 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AppUserId1")
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -311,7 +301,7 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId1");
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("PlaceId");
 
@@ -326,10 +316,8 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AppUserId1")
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -344,7 +332,7 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId1");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Itineraries");
                 });
@@ -387,10 +375,8 @@ namespace Repository.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AppUserId1")
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -413,7 +399,7 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId1");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Payments");
                 });
@@ -535,10 +521,8 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AppUserId1")
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Comment")
@@ -562,7 +546,7 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId1");
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("PlaceId");
 
@@ -577,8 +561,8 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -600,6 +584,10 @@ namespace Repository.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId")
+                        .IsUnique()
+                        .HasFilter("[AppUserId] IS NOT NULL");
 
                     b.ToTable("Subscriptions");
                 });
@@ -760,22 +748,13 @@ namespace Repository.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppUser", b =>
-                {
-                    b.HasOne("Domain.Entities.Subscription", "Subscription")
-                        .WithOne("AppUser")
-                        .HasForeignKey("Domain.Entities.AppUser", "SubscriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Subscription");
-                });
-
             modelBuilder.Entity("Domain.Entities.Blog", b =>
                 {
                     b.HasOne("Domain.Entities.AppUser", "AppUser")
                         .WithMany("Blogs")
-                        .HasForeignKey("AppUserId1");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AppUser");
                 });
@@ -825,7 +804,9 @@ namespace Repository.Migrations
                 {
                     b.HasOne("Domain.Entities.AppUser", "AppUser")
                         .WithMany("Favorites")
-                        .HasForeignKey("AppUserId1");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Place", "Place")
                         .WithMany("Favorites")
@@ -842,7 +823,9 @@ namespace Repository.Migrations
                 {
                     b.HasOne("Domain.Entities.AppUser", "AppUser")
                         .WithMany("Itineraries")
-                        .HasForeignKey("AppUserId1");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AppUser");
                 });
@@ -862,7 +845,9 @@ namespace Repository.Migrations
                 {
                     b.HasOne("Domain.Entities.AppUser", "AppUser")
                         .WithMany()
-                        .HasForeignKey("AppUserId1");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AppUser");
                 });
@@ -926,7 +911,9 @@ namespace Repository.Migrations
                 {
                     b.HasOne("Domain.Entities.AppUser", "AppUser")
                         .WithMany("Reviews")
-                        .HasForeignKey("AppUserId1");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Place", "Place")
                         .WithMany("Reviews")
@@ -937,6 +924,15 @@ namespace Repository.Migrations
                     b.Navigation("AppUser");
 
                     b.Navigation("Place");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Subscription", b =>
+                {
+                    b.HasOne("Domain.Entities.AppUser", "AppUser")
+                        .WithOne("Subscription")
+                        .HasForeignKey("Domain.Entities.Subscription", "AppUserId");
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -999,6 +995,9 @@ namespace Repository.Migrations
                     b.Navigation("Itineraries");
 
                     b.Navigation("Reviews");
+
+                    b.Navigation("Subscription")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Blog", b =>
@@ -1042,12 +1041,6 @@ namespace Repository.Migrations
                     b.Navigation("PlaceTags");
 
                     b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Subscription", b =>
-                {
-                    b.Navigation("AppUser")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Tag", b =>

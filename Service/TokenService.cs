@@ -13,14 +13,16 @@ namespace Service
     {
         private readonly IConfiguration _configuration;
         private readonly SymmetricSecurityKey _symmetricSecurityKey;
+        private readonly ISubscriptionService _subscriptionService;
 
-        public TokenService(IConfiguration configuration)
+        public TokenService(IConfiguration configuration, ISubscriptionService subscriptionService)
         {
+            _subscriptionService = subscriptionService;
             _configuration = configuration;
             _symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
         }
 
-        public string GetToken(AppUser user, List<string> roles)
+        public string GetToken(AppUser user, IList<string> roles)
         {
             List<Claim> claims = new List<Claim>
             {
@@ -29,7 +31,7 @@ namespace Service
                 new(ClaimTypes.NameIdentifier,user.Id),
                 new(ClaimTypes.GivenName,user.Name),
                 new(ClaimTypes.Surname,user.Surname),
-                new("SubscriptionStatus", user.Subscription.SubscriptionType),
+                new("SubscriptionStatus", _subscriptionService.GetByUserId(user.Id).Result.SubscriptionType),
             };
 
             claims.AddRange(roles.Select(m => new Claim(ClaimTypes.Role, m)));

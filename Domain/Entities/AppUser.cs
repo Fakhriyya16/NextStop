@@ -9,7 +9,6 @@ namespace Domain.Entities
         public string Surname { get; set; }
         public ICollection<Review> Reviews { get; set; }
         public ICollection<Itinerary> Itineraries { get; set; }
-        public int SubscriptionId { get; set; }
         public Subscription Subscription { get; set; }
         public ICollection<Blog> Blogs { get; set; }
         public ICollection<Favorite> Favorites { get; set; }

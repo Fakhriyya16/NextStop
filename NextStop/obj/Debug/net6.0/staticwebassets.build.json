@@ -1,11 +1,58 @@
 {
   "Version": 1,
-  "Hash": "WA3k/4HmWKT2cm3SrBqPxqT73/z4tkEjAq5gz9o6KOY=",
+  "Hash": "tqpUQ8kNFf0lNUP8njdcQKGBDvwW5eeMe4XEzzafwis=",
   "Source": "NextStop",
   "BasePath": "_content/NextStop",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "NextStop\\wwwroot",
+      "Source": "NextStop",
+      "ContentRoot": "D:\\VS\\NextStop\\NextStop\\wwwroot\\",
+      "BasePath": "_content/NextStop",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\VS\\NextStop\\NextStop\\wwwroot\\html\\ResetPassword.html",
+      "SourceId": "NextStop",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\VS\\NextStop\\NextStop\\wwwroot\\",
+      "BasePath": "_content/NextStop",
+      "RelativePath": "html/ResetPassword.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\html\\ResetPassword.html"
+    },
+    {
+      "Identity": "D:\\VS\\NextStop\\NextStop\\wwwroot\\html\\VerifyEmail.html",
+      "SourceId": "NextStop",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\VS\\NextStop\\NextStop\\wwwroot\\",
+      "BasePath": "_content/NextStop",
+      "RelativePath": "html/VerifyEmail.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\html\\VerifyEmail.html"
+    }
+  ]
 }

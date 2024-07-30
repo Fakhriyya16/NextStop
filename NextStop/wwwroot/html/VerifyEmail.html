@@ -3,35 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Verification Required</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Verify Your Email</title>
     <style>
-        .verification-container {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            padding: 10px;
+        }
+
+            .header h1 {
+                margin: 0;
+                color: #343a40;
+            }
+
+        .content {
+            padding: 20px;
             text-align: center;
         }
 
-        .verification-card {
-            max-width: 500px;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            .content p {
+                margin: 15px 0;
+                color: #495057;
+            }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #007bff;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            color: #6c757d;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <div class="verification-container">
-        <div class="verification-card bg-light">
-            <h2 class="mb-4">Email Verification Required</h2>
-            <p class="lead mb-4">Thank you for registering! To complete your registration, please check your email and click on the verification link we sent you.</p>
+    <div class="container">
+        <div class="header">
+            <h1>NextStop</h1>
+        </div>
+        <div class="content">
+            <h2>Hello {{userName}},</h2>
+            <p>Thank you for registering with NextStop. Please verify your email address by clicking the button below:</p>
+            <a href="{{verificationLink}}" class="button" style="display: inline-block; padding: 10px 20px; font-size: 16px; font-weight: bold; color: #ffffff; background-color: #007bff; border-radius: 5px; text-decoration: none; margin-top: 15px; text-align: center;">Verify Email</a>
+            <p>If you did not create an account, no further action is required.</p>
+        </div>
+        <div class="footer">
+            <p>Thank you for choosing NextStop!</p>
+            <p>If you have any questions, feel free to contact our support team.</p>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

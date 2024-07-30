@@ -15,7 +15,6 @@ namespace Domain.Configurations
 
             builder.Property(m=>m.Name).IsRequired();
             builder.Property(m=>m.Surname).IsRequired();
-            builder.Property(m=>m.SubscriptionId).IsRequired();
         }
     }
 }

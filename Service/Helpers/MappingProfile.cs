@@ -44,6 +44,7 @@ namespace Service.Helpers
 
             CreateMap<RegisterDto, AppUser>();
             CreateMap<LoginDto, AppUser>();
+            CreateMap<UserUpdateDto, AppUser>();
         }
     }
 }
