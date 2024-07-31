@@ -37,6 +37,7 @@ namespace Service
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ISendEmail, SendEmail>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<IBlogService, BlogService>();
 
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
 

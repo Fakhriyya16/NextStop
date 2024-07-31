@@ -12,7 +12,7 @@ namespace Repository
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IBlogRepository, BlogRepository>();
-            services.AddScoped<IBlogTagRepository, BlogTagRepository>();
+            services.AddScoped<IBlogImageRepository, BlogImageRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();

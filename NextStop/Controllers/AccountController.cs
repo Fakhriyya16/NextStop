@@ -43,6 +43,7 @@ namespace NextStop.Controllers
             }
         }
 
+        [HttpGet]
         public async Task<IActionResult> ForgetPassword([FromBody] string email)
         {
             if (string.IsNullOrWhiteSpace(email))

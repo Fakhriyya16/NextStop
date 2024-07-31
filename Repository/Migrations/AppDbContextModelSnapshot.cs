@@ -163,35 +163,6 @@ namespace Repository.Migrations
                     b.ToTable("BlogImages");
                 });
 
-            modelBuilder.Entity("Domain.Entities.BlogTag", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("BlogId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("SoftDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("TagId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BlogId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("BlogTag");
-                });
-
             modelBuilder.Entity("Domain.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -770,25 +741,6 @@ namespace Repository.Migrations
                     b.Navigation("Blog");
                 });
 
-            modelBuilder.Entity("Domain.Entities.BlogTag", b =>
-                {
-                    b.HasOne("Domain.Entities.Blog", "Blog")
-                        .WithMany("BlogTags")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Tag", "Tag")
-                        .WithMany("BlogTags")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Blog");
-
-                    b.Navigation("Tag");
-                });
-
             modelBuilder.Entity("Domain.Entities.City", b =>
                 {
                     b.HasOne("Domain.Entities.Country", "Country")
@@ -1003,8 +955,6 @@ namespace Repository.Migrations
             modelBuilder.Entity("Domain.Entities.Blog", b =>
                 {
                     b.Navigation("BlogImages");
-
-                    b.Navigation("BlogTags");
                 });
 
             modelBuilder.Entity("Domain.Entities.Category", b =>
@@ -1045,8 +995,6 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Domain.Entities.Tag", b =>
                 {
-                    b.Navigation("BlogTags");
-
                     b.Navigation("PlaceTags");
                 });
 #pragma warning restore 612, 618

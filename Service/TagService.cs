@@ -53,8 +53,7 @@ namespace Service
         public async Task<IEnumerable<TagDto>> GetAllAsync()
         {
             var tags = await _tagRepository.GetAllWithIncludes(
-                m => m.PlaceTags,
-                m => m.BlogTags
+                m => m.PlaceTags
             );
 
             return _mapper.Map<IEnumerable<TagDto>>(tags);
@@ -62,7 +61,7 @@ namespace Service
 
         public async Task<TagDto> GetByIdAsync(int id)
         {
-            return _mapper.Map<TagDto>(await _tagRepository.GetByIdWithIncludes(m => m.Id == id, m => m.PlaceTags, m => m.BlogTags));
+            return _mapper.Map<TagDto>(await _tagRepository.GetByIdWithIncludes(m => m.Id == id, m => m.PlaceTags));
         }
     }
 }

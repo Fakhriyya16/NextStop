@@ -2,6 +2,7 @@
 using AutoMapper;
 using Domain.Entities;
 using Service.DTOs.Accounts;
+using Service.DTOs.Blogs;
 using Service.DTOs.Categories;
 using Service.DTOs.Cities;
 using Service.DTOs.Countries;
@@ -30,8 +31,8 @@ namespace Service.Helpers
             CreateMap<TagCreateDto, Tag>();
             CreateMap<TagEditDto, Tag>();
             CreateMap<Tag, TagDto>()
-                 .ForMember(dest => dest.Places, opt => opt.MapFrom(src => src.PlaceTags.Select(pt => pt.Place).ToList()))
-                 .ForMember(dest => dest.Blogs, opt => opt.MapFrom(src => src.BlogTags.Select(bt => bt.Blog).ToList()));
+                 .ForMember(dest => dest.Places, opt => opt.MapFrom(src => src.PlaceTags.Select(pt => pt.Place).ToList()));
+                 
 
             CreateMap<PlaceCreateDto, Place>().ForMember(dest => dest.Images, opt => opt.Ignore());
             CreateMap<PlaceEditDto, Place>();
@@ -45,6 +46,12 @@ namespace Service.Helpers
             CreateMap<RegisterDto, AppUser>();
             CreateMap<LoginDto, AppUser>();
             CreateMap<UserUpdateDto, AppUser>();
+
+            CreateMap<Blog, BlogDto>().ForMember(dest => dest.PublishDate, opt => opt.MapFrom(m=>m.CreatedDate.ToString("dd.MM.yyyy")))
+                                      .ForMember(dest => dest.Author, opt => opt.MapFrom(m=>m.AppUser.Name + " " + m.AppUser.Surname))
+                                      .ForMember(dest => dest.Images, opt => opt.MapFrom(m=>m.BlogImages.Select(m=>m.ImageUrl).ToList()));
+            CreateMap<BlogCreateDto, Blog>();
+            CreateMap<BlogEditDto, Blog>();
         }
     }
 }

@@ -15,7 +15,6 @@ namespace Repository.Data
         public DbSet<Place> Places { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Tag> Tags { get; set; }
-        public DbSet<BlogTag> BlogTag { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Country> Countries { get; set; }
@@ -39,6 +38,7 @@ namespace Repository.Data
             builder.Entity<Tag>().HasQueryFilter(m => !m.SoftDelete);
             builder.Entity<Place>().HasQueryFilter(m => !m.SoftDelete);
             builder.Entity<PlaceTag>().HasQueryFilter(m => !m.SoftDelete);
+            builder.Entity<Blog>().HasQueryFilter(m => !m.SoftDelete);
 
 
             base.OnModelCreating(builder);

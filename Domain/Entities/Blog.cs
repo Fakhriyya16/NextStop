@@ -10,7 +10,6 @@ namespace Domain.Entities
         public DateTime PublishDate { get; set; } = DateTime.Now;
         public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }
-        public ICollection<BlogTag> BlogTags { get; set; }
         public ICollection<BlogImage> BlogImages { get; set; }
     }
 }
