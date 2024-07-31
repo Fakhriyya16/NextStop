@@ -14,6 +14,7 @@ using Service.Configurations;
 using Service.DTOs.Cities;
 using Service.Helpers;
 using Service.Interfaces;
+using Stripe;
 using System.Text;
 
 namespace Service
@@ -38,6 +39,7 @@ namespace Service
             services.AddScoped<ISendEmail, SendEmail>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<IBlogService, BlogService>();
+            services.AddScoped<IPaymentService, PaymentService>();
 
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
 
@@ -54,6 +56,10 @@ namespace Service
                 option.Lockout.MaxFailedAccessAttempts = 3;
                 option.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
             }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+
+            services.Configure<StripeSettings>(configuration.GetSection("Stripe"));
+
+            StripeConfiguration.ApiKey = configuration.GetSection("Stripe")["SecretKey"];
 
             services.AddAuthentication(options =>
             {

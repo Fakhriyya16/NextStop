@@ -19,11 +19,13 @@ namespace Service
         private readonly ICloudManagement _cloudManagement;
         private readonly IGeolocationService _geolocationService;
         private readonly IPlaceTagRepository _placeTagRepository;
+        private readonly IPlaceImageRepository _placeImageRepository;
 
         public PlaceService(IPlaceRepository placeRepository, IMapper mapper, 
                             ICityRepository cityRepository, ICategoryRepository categoryRepository, 
                             ITagRepository tagRepository, ICloudManagement cloudManagement,
-                            IGeolocationService geolocationService, IPlaceTagRepository placeTagRepository)
+                            IGeolocationService geolocationService, IPlaceTagRepository placeTagRepository,
+                            IPlaceImageRepository placeImageRepository)
         {
             _placeRepository = placeRepository;
             _mapper = mapper;
@@ -33,6 +35,7 @@ namespace Service
             _cloudManagement = cloudManagement;
             _geolocationService = geolocationService;
             _placeTagRepository = placeTagRepository;
+            _placeImageRepository = placeImageRepository;
         }
 
         public async Task CreateAsync(PlaceCreateDto model)
@@ -51,14 +54,17 @@ namespace Service
             newPlace.Longitude = coordinates.Longitude;
             newPlace.Latitude = coordinates.Latitude;
 
-            await _placeRepository.CreateAsync(newPlace);
-
             foreach (var image in model.Images)
             {
                 if (!image.IsImage()) throw new InvalidImageFormatException("The file is not a valid image or is empty.");
 
                 if (!image.IsValidSize(500)) throw new FileSizeExceededException("The file size exceeds the maximum allowed limit.");
+            }
 
+            await _placeRepository.CreateAsync(newPlace);
+
+            foreach (var image in model.Images)
+            {           
                 var fileName = $"{model.Name}_{Guid.NewGuid()}";
 
                 using (var imageStream = image.OpenReadStream())
@@ -71,6 +77,8 @@ namespace Service
                         ImageUrl = result.Url,
                         PublicId = result.PublicId,
                     };
+
+                    await _placeImageRepository.CreateAsync(placeImage);
                 }
             }
 
@@ -84,6 +92,8 @@ namespace Service
                         TagId = tagId,
                         PlaceId = newPlace.Id
                     };
+
+                    await _placeTagRepository.CreateAsync(placeTag);
                 };
             }
 

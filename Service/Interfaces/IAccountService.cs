@@ -15,5 +15,9 @@ namespace Service.Interfaces
         Task<AccountManagementResponse> UpdateProfile(string userId,UserUpdateDto model);
         Task<AccountManagementResponse> DeleteProfile(string userId);
         Task<AccountManagementResponse> LogOut();
+        Task<IEnumerable<UserDto>> GetAllUsers();
+        Task<UserDetailDto> GetUserById(string id);
+        Task<AccountManagementResponse> AddRoleToUser(string userId, string role);
+        Task<AccountManagementResponse> RemoveRoleFromUser(string userId, string role);
     }
 }

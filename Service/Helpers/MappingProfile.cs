@@ -46,6 +46,12 @@ namespace Service.Helpers
             CreateMap<RegisterDto, AppUser>();
             CreateMap<LoginDto, AppUser>();
             CreateMap<UserUpdateDto, AppUser>();
+            CreateMap<AppUser, UserDetailDto>().ForMember(dest => dest.Reviews, opt => opt.MapFrom(m=>m.Reviews.Select(m=>m.Comment).ToList()))
+                                               .ForMember(dest => dest.Blogs, opt => opt.MapFrom(m=>m.Blogs.Select(m=>m.Title).ToList()))
+                                               .ForMember(dest => dest.Favorites, opt => opt.MapFrom(m=>m.Favorites.Select(m=>m.Place.Name).ToList()))
+                                               .ForMember(dest => dest.SubscriptionType, opt => opt.MapFrom(m => m.Subscription.SubscriptionType));
+
+            CreateMap<AppUser, UserDto>().ForMember(dest => dest.SubscriptionType, opt => opt.MapFrom(m => m.Subscription.SubscriptionType));
 
             CreateMap<Blog, BlogDto>().ForMember(dest => dest.PublishDate, opt => opt.MapFrom(m=>m.CreatedDate.ToString("dd.MM.yyyy")))
                                       .ForMember(dest => dest.Author, opt => opt.MapFrom(m=>m.AppUser.Name + " " + m.AppUser.Surname))

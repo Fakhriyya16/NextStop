@@ -367,5 +367,107 @@ namespace Service
                 Message = "User logged out successfully."
             };
         }
+
+        public async Task<IEnumerable<UserDto>> GetAllUsers()
+        {
+            var users = _userManager.Users.ToList();
+            return _mapper.Map<IEnumerable<UserDto>>(users);
+        }
+
+        public async Task<UserDetailDto> GetUserById(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException("User ID is required.");
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                throw new NotFoundException("User");
+            }
+
+            var userDetail = _mapper.Map<UserDetailDto>(user);
+            userDetail.Roles = await _userManager.GetRolesAsync(user);
+            return userDetail;
+        }
+
+        public async Task<AccountManagementResponse> AddRoleToUser(string userId, string role)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new AccountManagementResponse
+                {
+                    StatusCode = (int)StatusCodes.Status404NotFound,
+                    Message = "User not found"
+                };
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains(role))
+            {
+                return new AccountManagementResponse
+                {
+                    StatusCode = (int)StatusCodes.Status400BadRequest,
+                    Message = "User already has this role"
+                };
+            }
+
+            var result = await _userManager.AddToRoleAsync(user, role);
+            if (!result.Succeeded)
+            {
+                return new AccountManagementResponse
+                {
+                    StatusCode = (int)StatusCodes.Status400BadRequest,
+                    Errors = result.Errors.Select(e => e.Description).ToList()
+                };
+            }
+
+            return new AccountManagementResponse
+            {
+                StatusCode = (int)StatusCodes.Status200OK,
+                Message = "Role added successfully"
+            };
+        }
+
+        public async Task<AccountManagementResponse> RemoveRoleFromUser(string userId, string role)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new AccountManagementResponse
+                {
+                    StatusCode = (int)StatusCodes.Status404NotFound,
+                    Message = "User not found"
+                };
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            if (!roles.Contains(role))
+            {
+                return new AccountManagementResponse
+                {
+                    StatusCode = (int)StatusCodes.Status400BadRequest,
+                    Message = "User does not have this role"
+                };
+            }
+
+            var result = await _userManager.RemoveFromRoleAsync(user, role);
+            if (!result.Succeeded)
+            {
+                return new AccountManagementResponse
+                {
+                    StatusCode = (int)StatusCodes.Status400BadRequest,
+                    Errors = result.Errors.Select(e => e.Description).ToList()
+                };
+            }
+
+            return new AccountManagementResponse
+            {
+                StatusCode = (int)StatusCodes.Status200OK,
+                Message = "Role removed successfully"
+            };
+        }
     }
 }

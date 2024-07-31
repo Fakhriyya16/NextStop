@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.Accounts;
+using Service.Helpers;
 using Service.Interfaces;
 
 namespace NextStop.Controllers
@@ -12,6 +13,74 @@ namespace NextStop.Controllers
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register([FromBody] RegisterDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var response = await _accountService.Register(request);
+
+                if (response.StatusCode == (int)StatusCodes.Status400BadRequest)
+                {
+                    return BadRequest(response);
+                }
+
+                if (response.StatusCode == (int)StatusCodes.Status500InternalServerError)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, response);
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new AccountManagementResponse
+                {
+                    StatusCode = (int)StatusCodes.Status500InternalServerError,
+                    Message = "An unexpected error occurred. Please try again later."
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login([FromBody] LoginDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var response = await _accountService.Login(request);
+
+                if (response.StatusCode == (int)StatusCodes.Status400BadRequest)
+                {
+                    return BadRequest(response);
+                }
+
+                if (response.StatusCode == (int)StatusCodes.Status404NotFound)
+                {
+                    return NotFound(response);
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new AccountManagementResponse
+                {
+                    StatusCode = (int)StatusCodes.Status500InternalServerError,
+                    Message = "An unexpected error occurred. Please try again later."
+                });
+            }
         }
 
         [HttpGet]

@@ -38,7 +38,15 @@ namespace Repository.Data
             builder.Entity<Tag>().HasQueryFilter(m => !m.SoftDelete);
             builder.Entity<Place>().HasQueryFilter(m => !m.SoftDelete);
             builder.Entity<PlaceTag>().HasQueryFilter(m => !m.SoftDelete);
+            builder.Entity<PlaceImage>().HasQueryFilter(m => !m.SoftDelete);
             builder.Entity<Blog>().HasQueryFilter(m => !m.SoftDelete);
+            builder.Entity<BlogImage>().HasQueryFilter(m => !m.SoftDelete);
+            builder.Entity<Favorite>().HasQueryFilter(m => !m.SoftDelete);
+            builder.Entity<Subscription>().HasQueryFilter(m => !m.SoftDelete);
+            builder.Entity<Itinerary>().HasQueryFilter(m => !m.SoftDelete);
+            builder.Entity<ItineraryDay>().HasQueryFilter(m => !m.SoftDelete);
+            builder.Entity<Review>().HasQueryFilter(m => !m.SoftDelete);
+            builder.Entity<Payment>().HasQueryFilter(m => !m.SoftDelete);
 
 
             base.OnModelCreating(builder);
