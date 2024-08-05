@@ -6,8 +6,11 @@ using Service.DTOs.Blogs;
 using Service.DTOs.Categories;
 using Service.DTOs.Cities;
 using Service.DTOs.Countries;
+using Service.DTOs.Favorites;
 using Service.DTOs.Places;
+using Service.DTOs.Reviews;
 using Service.DTOs.Tags;
+using System.ComponentModel.Design;
 
 namespace Service.Helpers
 {
@@ -58,6 +61,16 @@ namespace Service.Helpers
                                       .ForMember(dest => dest.Images, opt => opt.MapFrom(m=>m.BlogImages.Select(m=>m.ImageUrl).ToList()));
             CreateMap<BlogCreateDto, Blog>();
             CreateMap<BlogEditDto, Blog>();
+
+            CreateMap<Favorite, FavoriteDto>().ForMember(dest => dest.PlaceName, opt => opt.MapFrom(m => m.Place.Name))
+                                             .ForMember(dest => dest.CityName, opt => opt.MapFrom(m => m.Place.City.Name))
+                                             .ForMember(dest => dest.CountryName, opt => opt.MapFrom(m => m.Place.City.Country.Name))
+                                             .ForMember(dest => dest.MainImage, opt => opt.MapFrom(m => m.Place.Images.FirstOrDefault().ImageUrl));
+
+            CreateMap<Review, ReviewDto>().ForMember(dest => dest.User, opt => opt.MapFrom(m => m.AppUser.Name + " " + m.AppUser.Surname))
+                                         .ForMember(dest => dest.Place, opt => opt.MapFrom(m => m.Place.Name))
+                                         .ForMember(dest => dest.ReviewDate, opt => opt.MapFrom(m => m.ReviewDate.ToString("dddd, dd MMMM yyyy")));
+            CreateMap<ReviewCreateDto, Review>();
         }
     }
 }

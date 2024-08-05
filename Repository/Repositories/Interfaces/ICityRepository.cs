@@ -7,5 +7,6 @@ namespace Repository.Repositories.Interfaces
     {
         Task<bool> IsExist(string name);
         Task<string> GetCountryNameByCityId(int cityId);
+        Task<City> GetCityByName(string name);
     }
 }

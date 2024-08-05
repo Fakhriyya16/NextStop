@@ -10,7 +10,7 @@ namespace Domain.Configurations
         public void Configure(EntityTypeBuilder<ItineraryDay> builder)
         {
             builder.Property(m=>m.ItineraryId).IsRequired();
-            builder.Property(m=>m.Days).IsRequired();
+            builder.Property(m=>m.DayNumber).IsRequired();
         }
     }
 }

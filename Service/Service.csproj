@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Accord.MachineLearning" Version="3.8.0" />
+    <PackageReference Include="Accord.Math" Version="3.8.0" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="CloudinaryDotNet" Version="1.26.2" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />

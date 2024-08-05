@@ -7,7 +7,7 @@ namespace Domain.Entities
     {
         public int ItineraryId { get; set; }
         public Itinerary Itinerary { get; set; }
-        public int Days { get; set; }
-        public ICollection<Place> Places { get; set; }
+        public int DayNumber { get; set; }
+        public ICollection<ItineraryPlace> ItineraryPlaces { get; set; }
     }
 }

@@ -9,5 +9,7 @@ namespace Repository.Repositories.Interfaces
 {
     public interface IPaymentRepository : IBaseRepository<Payment>
     {
+        Task<Payment> GetPaymentByUserId(string userId);
+        Task<Payment> GetPaymentByStripeId(string stripeId);
     }
 }

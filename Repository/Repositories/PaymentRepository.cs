@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Repository.Data;
 using Repository.Repositories.Interfaces;
 using System;
@@ -13,6 +14,16 @@ namespace Repository.Repositories
     {
         public PaymentRepository(AppDbContext context) : base(context)
         {
+        }
+
+        public async Task<Payment> GetPaymentByStripeId(string stripeId)
+        {
+            return await _entities.FirstOrDefaultAsync(m => m.StripePaymentId == stripeId);
+        }
+
+        public async Task<Payment> GetPaymentByUserId(string userId)
+        {
+            return await _entities.FirstOrDefaultAsync(m => m.AppUserId == userId);
         }
     }
 }

@@ -9,5 +9,7 @@ namespace Repository.Repositories.Interfaces
 {
     public interface IReviewRepository : IBaseRepository<Review>
     {
+        Task<IEnumerable<Review>> GetAllForUser(string userId);
+        Task<IEnumerable<Review>> GetAllForPlace(int placeId);
     }
 }

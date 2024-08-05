@@ -16,6 +16,7 @@ using Service.Helpers;
 using Service.Interfaces;
 using Stripe;
 using System.Text;
+using Account = CloudinaryDotNet.Account;
 
 namespace Service
 {
@@ -40,6 +41,9 @@ namespace Service
             services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IItineraryService, ItineraryService>();
+            services.AddScoped<IFavoriteService, FavoriteService>();
+            services.AddScoped<IReviewService, ReviewService>();
 
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
 

@@ -1,11 +1,7 @@
 ﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Repository.Data;
 using Repository.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
@@ -13,6 +9,16 @@ namespace Repository.Repositories
     {
         public ReviewRepository(AppDbContext context) : base(context)
         {
+        }
+
+        public async Task<IEnumerable<Review>> GetAllForPlace(int placeId)
+        {
+            return await _entities.Where(m=>m.PlaceId == placeId).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Review>> GetAllForUser(string userId)
+        {
+            return await _entities.Where(m => m.AppUserId == userId).ToListAsync();
         }
     }
 }

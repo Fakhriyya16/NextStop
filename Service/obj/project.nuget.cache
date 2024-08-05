@@ -1,9 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "Lmzi6nQ2yQMpWjBss1B7rxvmLEpdTXISzfp3Y0g1+DHQRxFWjm4idKpqUbFocGy78jFCkbyQXQ0DQb3Ykr/HjQ==",
+  "dgSpecHash": "3RBxs0nmq9QTI6AcC5aF0maf1SAthR6Kf6r7r1u0nLGpyK/VmG4gvYf7Lr9c2OkVJ70gN+xxkbq9eYyzPHfKYw==",
   "success": true,
   "projectFilePath": "D:\\VS\\NextStop\\Service\\Service.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Faxriyya\\.nuget\\packages\\accord\\3.8.0\\accord.3.8.0.nupkg.sha512",
+    "C:\\Users\\Faxriyya\\.nuget\\packages\\accord.machinelearning\\3.8.0\\accord.machinelearning.3.8.0.nupkg.sha512",
+    "C:\\Users\\Faxriyya\\.nuget\\packages\\accord.math\\3.8.0\\accord.math.3.8.0.nupkg.sha512",
+    "C:\\Users\\Faxriyya\\.nuget\\packages\\accord.statistics\\3.8.0\\accord.statistics.3.8.0.nupkg.sha512",
     "C:\\Users\\Faxriyya\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\Faxriyya\\.nuget\\packages\\bouncycastle.cryptography\\2.4.0\\bouncycastle.cryptography.2.4.0.nupkg.sha512",
     "C:\\Users\\Faxriyya\\.nuget\\packages\\cloudinarydotnet\\1.26.2\\cloudinarydotnet.1.26.2.nupkg.sha512",

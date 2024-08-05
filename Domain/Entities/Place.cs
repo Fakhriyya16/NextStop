@@ -15,8 +15,7 @@ namespace Domain.Entities
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public ICollection<Review> Reviews { get; set; }
-        public int? ItineraryDayId { get; set; }
-        public ItineraryDay ItineraryDay { get; set; }
+        public ICollection<ItineraryPlace> ItineraryPlaces { get; set; }
         public ICollection<PlaceTag> PlaceTags { get; set; }
         public ICollection<Favorite> Favorites { get; set; }
     }

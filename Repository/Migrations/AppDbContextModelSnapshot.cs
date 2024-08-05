@@ -319,7 +319,7 @@ namespace Repository.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Days")
+                    b.Property<int>("DayNumber")
                         .HasColumnType("int");
 
                     b.Property<int>("ItineraryId")
@@ -333,6 +333,35 @@ namespace Repository.Migrations
                     b.HasIndex("ItineraryId");
 
                     b.ToTable("ItineraryDays");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ItineraryPlace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ItineraryDayId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("SoftDelete")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItineraryDayId");
+
+                    b.HasIndex("PlaceId");
+
+                    b.ToTable("ItineraryPlace");
                 });
 
             modelBuilder.Entity("Domain.Entities.Payment", b =>
@@ -396,9 +425,6 @@ namespace Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ItineraryDayId")
-                        .HasColumnType("int");
-
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
 
@@ -417,8 +443,6 @@ namespace Repository.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("CityId");
-
-                    b.HasIndex("ItineraryDayId");
 
                     b.ToTable("Places");
                 });
@@ -793,6 +817,25 @@ namespace Repository.Migrations
                     b.Navigation("Itinerary");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ItineraryPlace", b =>
+                {
+                    b.HasOne("Domain.Entities.ItineraryDay", "ItineraryDay")
+                        .WithMany("ItineraryPlaces")
+                        .HasForeignKey("ItineraryDayId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Place", "Place")
+                        .WithMany("ItineraryPlaces")
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ItineraryDay");
+
+                    b.Navigation("Place");
+                });
+
             modelBuilder.Entity("Domain.Entities.Payment", b =>
                 {
                     b.HasOne("Domain.Entities.AppUser", "AppUser")
@@ -818,15 +861,9 @@ namespace Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ItineraryDay", "ItineraryDay")
-                        .WithMany("Places")
-                        .HasForeignKey("ItineraryDayId");
-
                     b.Navigation("Category");
 
                     b.Navigation("City");
-
-                    b.Navigation("ItineraryDay");
                 });
 
             modelBuilder.Entity("Domain.Entities.PlaceImage", b =>
@@ -979,7 +1016,7 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Domain.Entities.ItineraryDay", b =>
                 {
-                    b.Navigation("Places");
+                    b.Navigation("ItineraryPlaces");
                 });
 
             modelBuilder.Entity("Domain.Entities.Place", b =>
@@ -987,6 +1024,8 @@ namespace Repository.Migrations
                     b.Navigation("Favorites");
 
                     b.Navigation("Images");
+
+                    b.Navigation("ItineraryPlaces");
 
                     b.Navigation("PlaceTags");
 

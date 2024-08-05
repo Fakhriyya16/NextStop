@@ -12,6 +12,11 @@ namespace Repository.Repositories
         {
         }
 
+        public async Task<City> GetCityByName(string name)
+        {
+            return await _entities.FirstOrDefaultAsync(m => m.Name.ToLower().Trim() == name.ToLower().Trim());
+        }
+
         public async Task<string> GetCountryNameByCityId(int cityId)
         {
             var city = await _entities.FirstOrDefaultAsync(m=>m.Id == cityId);
