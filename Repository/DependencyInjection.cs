@@ -24,6 +24,8 @@ namespace Repository
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
+            services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+            services.AddScoped<IItineraryPlaceRepository, ItineraryPlaceRepository>();
 
 
             return services;

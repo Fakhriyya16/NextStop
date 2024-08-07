@@ -72,7 +72,7 @@ namespace Repository.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<PaginationResponse<T>> GetPagination(int currentPage, int pageSize)
+        public virtual async Task<PaginationResponse<T>> GetPagination(int currentPage, int pageSize)
         {
             var totalCount = await _entities.AsNoTracking().CountAsync();
 

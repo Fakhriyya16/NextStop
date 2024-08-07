@@ -38,7 +38,14 @@ namespace Service
             Review review = _mapper.Map<Review>(model);
 
             review.AppUser = await _userManager.FindByIdAsync(userId);
-            review.Place = await _placeRepository.GetById(placeId);
+
+            var place = await _placeRepository.GetById(placeId);
+            var rating = (place.Rating + model.Rating) / place.Reviews.Count;
+
+            place.Rating = rating;
+            await _placeRepository.EditAsync(place);
+
+            review.Place = place;
 
             await _reviewRepository.CreateAsync(review);
         }

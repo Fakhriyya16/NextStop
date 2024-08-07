@@ -1,9 +1,4 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository.Repositories.Interfaces
 {
@@ -12,5 +7,6 @@ namespace Repository.Repositories.Interfaces
         Task<bool> IsExist(string name);
         Task<IEnumerable<Place>> GetPlacesByCategoryAndCity(Category category,City city);
         Task<IEnumerable<Place>> GetPlacesByCityForItinerary(City city);
+        Task<IEnumerable<Place>> SortBy(string property, string order);
     }
 }

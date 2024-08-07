@@ -12,5 +12,6 @@ namespace Domain.Entities
         public Subscription Subscription { get; set; }
         public ICollection<Blog> Blogs { get; set; }
         public ICollection<Favorite> Favorites { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
     }
 }

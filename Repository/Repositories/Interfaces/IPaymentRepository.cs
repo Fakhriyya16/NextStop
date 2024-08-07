@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository.Repositories.Interfaces
 {
@@ -11,5 +10,6 @@ namespace Repository.Repositories.Interfaces
     {
         Task<Payment> GetPaymentByUserId(string userId);
         Task<Payment> GetPaymentByStripeId(string stripeId);
+        Task<IEnumerable<Payment>> SortBy(string property, string order);
     }
 }

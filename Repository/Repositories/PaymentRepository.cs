@@ -25,5 +25,42 @@ namespace Repository.Repositories
         {
             return await _entities.FirstOrDefaultAsync(m => m.AppUserId == userId);
         }
+
+        public async Task<IEnumerable<Payment>> SortBy(string property, string order)
+        {
+            var data = await _entities.Include(m => m.AppUser).ToListAsync();
+
+            switch (property)
+            {
+                case "date":
+                    if (order == "desc")
+                    {
+                        return data.OrderByDescending(m => m.CreatedDate);
+                    }
+                    else if (order == "asc")
+                    {
+                        return data.OrderBy(m => m.CreatedDate);
+                    }
+                    else
+                    {
+                        return data;
+                    }
+                case "amount":
+                    if (order == "desc")
+                    {
+                        return data.OrderByDescending(m => m.Amount);
+                    }
+                    else if (order == "asc")
+                    {
+                        return data.OrderBy(m => m.Amount);
+                    }
+                    else
+                    {
+                        return data;
+                    }
+                default:
+                    return data;
+            }
+        }
     }
 }
