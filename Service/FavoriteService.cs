@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Repository.Repositories;
 using Repository.Repositories.Interfaces;
+using Service.DTOs.Blogs;
 using Service.DTOs.Favorites;
+using Service.Helpers;
 using Service.Helpers.Exceptions;
 using Service.Interfaces;
 
@@ -39,6 +42,18 @@ namespace Service
             var favorites = await _favoriteRepository.GetAllWithIncludes(m => m.Place);
 
             return _mapper.Map<IEnumerable<FavoriteDto>>(favorites);
+        }
+
+        public async Task<PaginateResponse<FavoriteDto>> GetAllPaginated(int currentPage, int pageSize)
+        {
+            var response = await _favoriteRepository.GetPagination(currentPage, pageSize);
+
+            var result = new PaginateResponse<FavoriteDto>()
+            {
+                Data = _mapper.Map<List<FavoriteDto>>(response.Data),
+            };
+
+            return _mapper.Map(response, result);
         }
 
         public async Task<Favorite> GetByIdAsync(int id)

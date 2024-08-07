@@ -1,4 +1,4 @@
-﻿
+﻿using Repository.Helpers;
 using Service.DTOs.Accounts;
 using Service.Helpers;
 
@@ -19,5 +19,6 @@ namespace Service.Interfaces
         Task<UserDetailDto> GetUserById(string id);
         Task<AccountManagementResponse> AddRoleToUser(string userId, string role);
         Task<AccountManagementResponse> RemoveRoleFromUser(string userId, string role);
+        Task<PaginationResponse<UserDto>> GetPaginatedUsers(int currentPage, int pageSize); 
     }
 }

@@ -3,7 +3,6 @@ namespace Service.DTOs.Accounts
 {
     public class UserDto
     {
-        public string AppUserId { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }

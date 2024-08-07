@@ -1,5 +1,7 @@
 ﻿
+using Repository.Helpers;
 using Service.DTOs.Blogs;
+using Service.Helpers;
 
 namespace Service.Interfaces
 {
@@ -10,5 +12,6 @@ namespace Service.Interfaces
         Task EditAsync(int? id, BlogEditDto model);
         Task<IEnumerable<BlogDto>> GetAllAsync();
         Task<BlogDto> GetByIdAsync(int id);
+        Task<PaginateResponse<BlogDto>> GetPaginatedBlogs(int currentPage, int pageSize);
     }
 }

@@ -2,8 +2,10 @@
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore.Scaffolding;
+using Repository.Helpers;
 using Repository.Repositories.Interfaces;
 using Service.DTOs.Blogs;
+using Service.Helpers;
 using Service.Helpers.Exceptions;
 using Service.Helpers.Extensions;
 using Service.Interfaces;
@@ -125,6 +127,18 @@ namespace Service
             var blog = await _blogRepository.GetByIdWithIncludes(m => m.Id == id, m => m.BlogImages,m=>m.AppUser);
 
             return _mapper.Map<BlogDto>(blog);
+        }
+
+        public async Task<PaginateResponse<BlogDto>> GetPaginatedBlogs(int currentPage, int pageSize)
+        {
+            var response = await _blogRepository.GetPagination(currentPage, pageSize);
+
+            var result = new PaginateResponse<BlogDto>()
+            {
+                Data = _mapper.Map<List<BlogDto>>(response.Data),
+            };
+
+            return _mapper.Map(response,result);
         }
     }
 }

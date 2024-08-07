@@ -1,18 +1,14 @@
-﻿
-using AutoMapper;
-using CloudinaryDotNet;
+﻿using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Routing;
-using Newtonsoft.Json.Linq;
-using Org.BouncyCastle.Asn1.Ocsp;
+using Microsoft.EntityFrameworkCore;
+using Repository.Helpers;
 using Service.DTOs.Accounts;
 using Service.Helpers;
 using Service.Helpers.Exceptions;
 using Service.Interfaces;
+using System.Drawing.Printing;
 using System.Web;
 
 namespace Service
@@ -24,26 +20,21 @@ namespace Service
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IUrlHelper _urlHelper;
         private readonly ISendEmail _sendEmail;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISubscriptionService _subscriptionService;
         private readonly string _baseUrl = "https://localhost:7264";
 
         public AccountService(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, 
                               SignInManager<AppUser> signInManager, ITokenService tokenService, 
-                              IMapper mapper, IUrlHelperFactory urlHelperFactory, ISendEmail sendEmail, 
-                              IHttpContextAccessor httpContextAccessor, ISubscriptionService subscriptionService)
+                              IMapper mapper, ISendEmail sendEmail, 
+                              ISubscriptionService subscriptionService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
             _mapper = mapper;
-            _urlHelperFactory = urlHelperFactory;
             _sendEmail = sendEmail;
-            _httpContextAccessor = httpContextAccessor;
             _subscriptionService = subscriptionService;
         }
 
@@ -468,6 +459,44 @@ namespace Service
                 StatusCode = (int)StatusCodes.Status200OK,
                 Message = "Role removed successfully"
             };
+        }
+
+        public async Task<PaginationResponse<UserDto>> GetPaginatedUsers(int currentPage,int pageSize)
+        {
+            var totalCount = await _userManager.Users.CountAsync();
+
+            int pageCount = (int)Math.Ceiling((double)(totalCount / pageSize));
+
+            var data = await _userManager.Users.OrderBy(m => m.Surname)
+                                         .Skip((currentPage - 1) * pageSize)
+                                         .Take(pageSize).ToListAsync();
+
+            var mappedData = _mapper.Map<List<UserDto>>(data);
+
+            bool hasNext = true;
+            bool hasPrevious = true;
+
+            if (currentPage == 1)
+            {
+                hasPrevious = false;
+            }
+            if (currentPage == pageCount)
+            {
+                hasNext = false;
+            }
+
+            var response = new PaginationResponse<UserDto>()
+            {
+                Data = mappedData,
+                TotalCount = totalCount,
+                CurrentPage = currentPage,
+                PageCount = pageCount,
+                PageSize = pageSize,
+                HasNext = hasNext,
+                HasPrevious = hasPrevious,
+            };
+
+            return response;
         }
     }
 }

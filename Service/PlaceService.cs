@@ -1,8 +1,11 @@
 ﻿
 using AutoMapper;
 using Domain.Entities;
+using Repository.Repositories;
 using Repository.Repositories.Interfaces;
+using Service.DTOs.Blogs;
 using Service.DTOs.Places;
+using Service.Helpers;
 using Service.Helpers.Exceptions;
 using Service.Helpers.Extensions;
 using Service.Interfaces;
@@ -180,6 +183,18 @@ namespace Service
                                                                    m => m.Images);
 
             return _mapper.Map<IEnumerable<PlaceDto>>(places);
+        }
+
+        public async Task<PaginateResponse<PlaceDto>> GetAllPaginated(int currentPage, int pageSize)
+        {
+            var response = await _placeRepository.GetPagination(currentPage, pageSize);
+
+            var result = new PaginateResponse<PlaceDto>()
+            {
+                Data = _mapper.Map<List<PlaceDto>>(response.Data),
+            };
+
+            return _mapper.Map(response, result);
         }
 
         public async Task<PlaceDto> GetByIdAsync(int id)

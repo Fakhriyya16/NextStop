@@ -1,5 +1,6 @@
 ﻿
 using Domain.Common;
+using Repository.Helpers;
 using System.Linq.Expressions;
 
 namespace Repository.Repositories.Interfaces
@@ -13,5 +14,6 @@ namespace Repository.Repositories.Interfaces
         Task<T> GetByIdWithIncludes(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
         Task<IEnumerable<T>> GetAllAsync();
         Task<IEnumerable<T>> GetAllWithIncludes(params Expression<Func<T, object>>[] includes);
+        Task<PaginationResponse<T>> GetPagination(int currentPage, int pageSize);
     }
 }

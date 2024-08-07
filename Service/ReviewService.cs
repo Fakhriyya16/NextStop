@@ -2,8 +2,11 @@
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Repository.Repositories;
 using Repository.Repositories.Interfaces;
+using Service.DTOs.Blogs;
 using Service.DTOs.Reviews;
+using Service.Helpers;
 using Service.Helpers.Exceptions;
 using Service.Interfaces;
 
@@ -66,6 +69,18 @@ namespace Service
             }
 
             return _mapper.Map<IEnumerable<ReviewDto>>(await _reviewRepository.GetAllForUser(userId));
+        }
+
+        public async Task<PaginateResponse<ReviewDto>> GetAllPaginated(int currentPage, int pageSize)
+        {
+            var response = await _reviewRepository.GetPagination(currentPage, pageSize);
+
+            var result = new PaginateResponse<ReviewDto>()
+            {
+                Data = _mapper.Map<List<ReviewDto>>(response.Data),
+            };
+
+            return _mapper.Map(response, result);
         }
 
         public async Task<ReviewDto> GetByIdAsync(int id)

@@ -1,6 +1,7 @@
 ﻿
 using AutoMapper;
 using Domain.Entities;
+using Repository.Helpers;
 using Service.DTOs.Accounts;
 using Service.DTOs.Blogs;
 using Service.DTOs.Categories;
@@ -39,6 +40,7 @@ namespace Service.Helpers
 
             CreateMap<PlaceCreateDto, Place>().ForMember(dest => dest.Images, opt => opt.Ignore());
             CreateMap<PlaceEditDto, Place>();
+            CreateMap<PaginationResponse<Place>, PaginateResponse<PlaceDto>>().ForMember(dest => dest.Data, opt => opt.Ignore());
             CreateMap<Place, PlaceDto>().ForMember(dest => dest.City, opt => opt.MapFrom(m => m.City.Name))
                                         .ForMember(dest => dest.Category, opt => opt.MapFrom(m => m.Category.Name))
                                         .ForMember(dest => dest.Country, opt => opt.MapFrom(m => m.City.Country.Name))
@@ -47,6 +49,7 @@ namespace Service.Helpers
                                         .ForMember(dest => dest.Tags, opt => opt.MapFrom(m => m.PlaceTags.Select(pt => pt.Tag.Name).ToList()));
 
             CreateMap<RegisterDto, AppUser>();
+            CreateMap<AppUser, UserDto>().ForMember(dest => dest.SubscriptionType, opt => opt.MapFrom(m => m.Subscription.SubscriptionType));
             CreateMap<LoginDto, AppUser>();
             CreateMap<UserUpdateDto, AppUser>();
             CreateMap<AppUser, UserDetailDto>().ForMember(dest => dest.Reviews, opt => opt.MapFrom(m=>m.Reviews.Select(m=>m.Comment).ToList()))
@@ -61,16 +64,19 @@ namespace Service.Helpers
                                       .ForMember(dest => dest.Images, opt => opt.MapFrom(m=>m.BlogImages.Select(m=>m.ImageUrl).ToList()));
             CreateMap<BlogCreateDto, Blog>();
             CreateMap<BlogEditDto, Blog>();
+            CreateMap<PaginationResponse<Blog>, PaginateResponse<BlogDto>>().ForMember(dest => dest.Data, opt => opt.Ignore());
 
             CreateMap<Favorite, FavoriteDto>().ForMember(dest => dest.PlaceName, opt => opt.MapFrom(m => m.Place.Name))
                                              .ForMember(dest => dest.CityName, opt => opt.MapFrom(m => m.Place.City.Name))
                                              .ForMember(dest => dest.CountryName, opt => opt.MapFrom(m => m.Place.City.Country.Name))
                                              .ForMember(dest => dest.MainImage, opt => opt.MapFrom(m => m.Place.Images.FirstOrDefault().ImageUrl));
+            CreateMap<PaginationResponse<Favorite>, PaginateResponse<FavoriteDto>>().ForMember(dest => dest.Data, opt => opt.Ignore());
 
             CreateMap<Review, ReviewDto>().ForMember(dest => dest.User, opt => opt.MapFrom(m => m.AppUser.Name + " " + m.AppUser.Surname))
                                          .ForMember(dest => dest.Place, opt => opt.MapFrom(m => m.Place.Name))
                                          .ForMember(dest => dest.ReviewDate, opt => opt.MapFrom(m => m.ReviewDate.ToString("dddd, dd MMMM yyyy")));
             CreateMap<ReviewCreateDto, Review>();
+            CreateMap<PaginationResponse<Review>, PaginateResponse<ReviewDto>>().ForMember(dest => dest.Data, opt => opt.Ignore());
         }
     }
 }

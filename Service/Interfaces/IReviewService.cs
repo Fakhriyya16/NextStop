@@ -1,6 +1,7 @@
 ﻿
 using Org.BouncyCastle.Bcpg;
 using Service.DTOs.Reviews;
+using Service.Helpers;
 
 namespace Service.Interfaces
 {
@@ -11,5 +12,6 @@ namespace Service.Interfaces
         Task<IEnumerable<ReviewDto>> GetAllForPlace(int? placeId);
         Task<IEnumerable<ReviewDto>> GetAllForUser(string userId);
         Task<ReviewDto> GetByIdAsync(int id);
+        Task<PaginateResponse<ReviewDto>> GetAllPaginated(int currentPage, int pageSize);
     }
 }
