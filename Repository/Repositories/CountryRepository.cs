@@ -16,5 +16,10 @@ namespace Repository.Repositories
         {
             return await _entities.FirstOrDefaultAsync(m=>m.Name == name);
         }
+
+        public async Task<IEnumerable<Country>> SearchByNameAsync(string searchText)
+        {
+            return await _entities.Where(m=>m.Name.Contains(name)).ToListAsync();
+        }
     }
 }

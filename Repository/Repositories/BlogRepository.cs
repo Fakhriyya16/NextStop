@@ -17,6 +17,11 @@ namespace Repository.Repositories
             return await _entities.AnyAsync(e => e.Title == title);
         }
 
+        public async Task<IEnumerable<Blog>> SearchByTitle(string searchText)
+        {
+            return await _entities.Where(m => m.Title.Contains(searchText)).ToListAsync();
+        }
+
         public async Task<IEnumerable<Blog>> SortBy(string property,string order)
         {
              var data = await _entities.Include(m => m.AppUser).Include(m => m.BlogImages).ToListAsync();

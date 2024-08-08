@@ -14,12 +14,12 @@ namespace Repository.Repositories
 
         public async Task<IEnumerable<Place>> GetPlacesByCategoryAndCity(Category category, City city)
         {
-            return await _entities.Where(m=>m.City == city).Where(m=>m.Category == category).ToListAsync();
+            return await _entities.Where(m => m.City == city).Where(m => m.Category == category).ToListAsync();
         }
 
         public async Task<IEnumerable<Place>> GetPlacesByCityForItinerary(City city)
         {
-            return await _entities.Where(m=>m.City == city).Include(m=>m.Category).ToListAsync();
+            return await _entities.Where(m => m.City == city).Include(m => m.Category).ToListAsync();
         }
 
         public async Task<bool> IsExist(string name)
@@ -33,9 +33,9 @@ namespace Repository.Repositories
 
             int pageCount = (int)Math.Ceiling((double)(totalCount / pageSize));
 
-            var data = await _entities.AsNoTracking().OrderBy(m => m.Id).Include(m=>m.Category)
-                                      .Include(m=>m.City).Include(m=>m.Reviews).Include(m=>m.PlaceTags)
-                                      .Include(m=>m.Images)
+            var data = await _entities.AsNoTracking().OrderBy(m => m.Id).Include(m => m.Category)
+                                      .Include(m => m.City).Include(m => m.Reviews).Include(m => m.PlaceTags)
+                                      .Include(m => m.Images)
                                       .Skip((currentPage - 1) * pageSize)
                                       .Take(pageSize).ToListAsync();
 
@@ -68,8 +68,8 @@ namespace Repository.Repositories
         public async Task<IEnumerable<Place>> SortBy(string property, string order)
         {
             var data = await _entities.Include(m => m.Category).Include(m => m.City)
-                                      .Include(m=>m.Images).Include(m=>m.PlaceTags)
-                                      .Include(m=>m.Reviews).ToListAsync();
+                                      .Include(m => m.Images).Include(m => m.PlaceTags)
+                                      .Include(m => m.Reviews).ToListAsync();
 
             switch (property)
             {
@@ -102,6 +102,27 @@ namespace Repository.Repositories
                 default:
                     return data;
             }
+        }
+
+        public async Task<IEnumerable<Place>> SearchByName(string searchText)
+        {
+            return await _entities.Where(m => m.Name.Contains(searchText)).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Place>> FilterByCategory(string category)
+        {
+            return await _entities.Where(m => m.Category.Name == category).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Place>> FilterByCity(string city)
+        {
+            return await _entities.Where(m => m.City.Name == city).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Place>> FilterByTag(string tag)
+        {
+            return await _entities.Where(m => m.PlaceTags.Any(pt => pt.Tag.Name == tag))
+                                  .ToListAsync();
         }
     }
 }
