@@ -1,4 +1,6 @@
-﻿using Repository.Helpers;
+﻿using Domain.Entities;
+using Microsoft.AspNetCore.Http;
+using Repository.Helpers;
 using Service.DTOs.Accounts;
 using Service.Helpers;
 
@@ -19,6 +21,8 @@ namespace Service.Interfaces
         Task<UserDetailDto> GetUserById(string id);
         Task<AccountManagementResponse> AddRoleToUser(string userId, string role);
         Task<AccountManagementResponse> RemoveRoleFromUser(string userId, string role);
-        Task<PaginationResponse<UserDto>> GetPaginatedUsers(int currentPage, int pageSize); 
+        Task<PaginationResponse<UserDto>> GetPaginatedUsers(int currentPage, int pageSize);
+        bool IsAuthenticated(HttpContext httpContext);
+        Task<AppUser> GetAuthenticatedUser(HttpContext httpContext);
     }
 }

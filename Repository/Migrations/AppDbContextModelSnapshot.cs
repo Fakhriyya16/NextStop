@@ -438,6 +438,9 @@ namespace Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Rating")
+                        .HasColumnType("int");
+
                     b.Property<bool>("SoftDelete")
                         .HasColumnType("bit");
 

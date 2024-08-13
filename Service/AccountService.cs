@@ -380,6 +380,7 @@ namespace Service
 
             var userDetail = _mapper.Map<UserDetailDto>(user);
             userDetail.Roles = await _userManager.GetRolesAsync(user);
+            userDetail.SubscriptionType = _subscriptionService.GetByUserId(id).Result.SubscriptionType;
             return userDetail;
         }
 
@@ -497,6 +498,21 @@ namespace Service
             };
 
             return response;
+        }
+
+        public bool IsAuthenticated(HttpContext httpContext)
+        {
+            return httpContext.User.Identity.IsAuthenticated;
+        }
+
+        public async Task<AppUser> GetAuthenticatedUser(HttpContext httpContext)
+        {
+            if (IsAuthenticated(httpContext))
+            {
+                var userId = _userManager.GetUserId(httpContext.User);
+                return await _userManager.FindByIdAsync(userId);
+            }
+            return null;
         }
     }
 }

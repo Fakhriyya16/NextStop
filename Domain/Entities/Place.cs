@@ -18,6 +18,6 @@ namespace Domain.Entities
         public ICollection<ItineraryPlace> ItineraryPlaces { get; set; }
         public ICollection<PlaceTag> PlaceTags { get; set; }
         public ICollection<Favorite> Favorites { get; set; }
-        public int Rating { get; set; }
+        public int? Rating { get; set; }
     }
 }

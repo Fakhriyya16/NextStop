@@ -19,7 +19,7 @@ namespace Repository.Repositories
 
         public async Task<IEnumerable<Country>> SearchByNameAsync(string searchText)
         {
-            return await _entities.Where(m=>m.Name.Contains(name)).ToListAsync();
+            return await _entities.Where(m=>m.Name.Contains(searchText)).ToListAsync();
         }
     }
 }

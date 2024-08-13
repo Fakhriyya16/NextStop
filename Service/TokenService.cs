@@ -26,9 +26,8 @@ namespace Service
         {
             List<Claim> claims = new List<Claim>
             {
-                new(JwtRegisteredClaimNames.NameId,user.UserName),
+                new(JwtRegisteredClaimNames.NameId,user.Id),
                 new(JwtRegisteredClaimNames.Email,user.Email),
-                new(ClaimTypes.NameIdentifier,user.Id),
                 new(ClaimTypes.GivenName,user.Name),
                 new(ClaimTypes.Surname,user.Surname),
                 new("SubscriptionStatus", _subscriptionService.GetByUserId(user.Id).Result.SubscriptionType),

@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.Accounts;
 using Service.Helpers;
 using Service.Interfaces;
+using System.Security.Claims;
 
 namespace NextStop.Controllers
 {
@@ -13,6 +15,53 @@ namespace NextStop.Controllers
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAuthStatus()
+        {
+            var user = await _accountService.GetAuthenticatedUser(HttpContext);
+
+            if (user != null)
+            {
+                return Ok(new
+                {
+                    IsLoggedIn = true,
+                    User = new
+                    {
+                        Id = user.Id,
+                        Name = user.Name,
+                        Surname = user.Surname,
+                        Email = user.Email,
+                        Subscription = user.Subscription.SubscriptionType
+                    }
+                });
+            }
+            else
+            {
+                return Ok(new { IsLoggedIn = false });
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var user = await _accountService.GetUserById(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
         }
 
         [HttpPost]
