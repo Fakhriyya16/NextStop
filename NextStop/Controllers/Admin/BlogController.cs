@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.Blogs;
+using Service.Helpers.Exceptions;
 using Service.Interfaces;
 
 namespace NextStop.Controllers.Admin
@@ -14,47 +15,71 @@ namespace NextStop.Controllers.Admin
             _blogService = blogService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromForm] BlogCreateDto request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            await _blogService.CreateAsync(request);
-            return Ok();
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> Edit([FromQuery] int id, [FromForm] BlogEditDto request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            await _blogService.EditAsync(id,request);
-            return Ok();
-        }
-
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromQuery] int id)
+        public async Task<IActionResult> DeleteAsync([FromQuery]int? id)
         {
-            await _blogService.DeleteAsync(id);
-            return Ok();
+            try
+            {
+                await _blogService.DeleteAsync(id);
+                return Ok("Blog deleted successfully.");
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _blogService.GetAllAsync());
+            try
+            {
+                var blogs = await _blogService.GetAllAsync();
+                return Ok(blogs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            return Ok(await _blogService.GetByIdAsync(id));
+            try
+            {
+                var blog = await _blogService.GetByIdAsync(id);
+                if (blog == null)
+                    return NotFound(new { message = "Blog not found." });
+
+                return Ok(blog);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPaginatedBlogs([FromQuery] int currentPage, [FromQuery] int pageSize)
+        {
+            try
+            {
+                var blogs = await _blogService.GetPaginatedBlogs(currentPage, pageSize);
+                return Ok(blogs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
     }
 }

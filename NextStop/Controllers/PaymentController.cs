@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.Payments;
+using Service.Helpers.Exceptions;
 using Service.Interfaces;
 using Stripe;
+using System.Security.Claims;
 
 namespace NextStop.Controllers
 {
@@ -15,6 +18,7 @@ namespace NextStop.Controllers
             _paymentService = paymentService;   
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreatePaymentIntent([FromBody] PaymentIntentRequest request)
         {
@@ -72,5 +76,86 @@ namespace NextStop.Controllers
             return Ok();
         }
 
+        [HttpPost]
+        [Authorize] 
+        public async Task<IActionResult> ChangeSubscription()
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized(new { message = "User is not authorized" });
+                }
+
+                await _paymentService.ChangeSubscriptionType(userId);
+                return Ok(new { message = "Subscription changed successfully" });
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetPaymentByUserId([FromQuery]string userId)
+        {
+            try
+            {
+                var payment = await _paymentService.GetPaymentByUserId(userId);
+                return Ok(payment);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+
+        [HttpPost("handle-cancellation")]
+        public async Task<IActionResult> HandlePaymentCancellation([FromBody] PaymentIntent paymentIntent)
+        {
+            try
+            {
+                await _paymentService.HandlePaymentCancellation(paymentIntent);
+                return Ok(new { message = "Payment cancellation handled successfully" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("handle-failure")]
+        [AllowAnonymous] 
+        public async Task<IActionResult> HandlePaymentFailure([FromBody] PaymentIntent paymentIntent)
+        {
+            try
+            {
+                await _paymentService.HandlePaymentFailure(paymentIntent);
+                return Ok(new { message = "Payment failure handled successfully" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
     }
 }

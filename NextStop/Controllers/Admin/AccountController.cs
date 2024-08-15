@@ -1,10 +1,4 @@
-﻿using CloudinaryDotNet.Actions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Service.DTOs.Accounts;
-using Service.Helpers;
+﻿using Microsoft.AspNetCore.Mvc;
 using Service.Helpers.Exceptions;
 using Service.Interfaces;
 
@@ -56,9 +50,36 @@ namespace NextStop.Controllers.Admin
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetPaginatedUsers([FromQuery] int currentPage, [FromQuery] int pageSize)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = await _accountService.GetPaginatedUsers(currentPage, pageSize);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving paginated users.");
+            }
+        }
+
+            [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            return Ok(await _accountService.GetAllUsers());
+            try
+            {
+                var users = await _accountService.GetAllUsers();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving users.");
+            }
         }
 
         [HttpPost]

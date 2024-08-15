@@ -1,10 +1,7 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Repository.Repositories;
 using Repository.Repositories.Interfaces;
-using Service.DTOs.Blogs;
 using Service.DTOs.Reviews;
 using Service.Helpers;
 using Service.Helpers.Exceptions;

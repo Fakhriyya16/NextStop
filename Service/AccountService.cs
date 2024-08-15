@@ -8,7 +8,6 @@ using Service.DTOs.Accounts;
 using Service.Helpers;
 using Service.Helpers.Exceptions;
 using Service.Interfaces;
-using System.Drawing.Printing;
 using System.Web;
 
 namespace Service

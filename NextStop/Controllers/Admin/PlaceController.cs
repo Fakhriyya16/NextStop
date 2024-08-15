@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.Places;
+using Service.Helpers.Exceptions;
 using Service.Interfaces;
 
 namespace NextStop.Controllers.Admin
@@ -17,34 +19,134 @@ namespace NextStop.Controllers.Admin
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] PlaceCreateDto request)
         {
-            await _placeService.CreateAsync(request);
-            return Ok();
+            try
+            {
+                await _placeService.CreateAsync(request);
+                return CreatedAtAction(nameof(GetById), request);
+            }
+            catch (EntityExistsException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidImageFormatException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (FileSizeExceededException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> Edit([FromQuery] int id, [FromForm] PlaceEditDto request)
         {
-            await _placeService.EditAsync(id, request);
-            return Ok();
+            try
+            {
+                await _placeService.EditAsync(id, request);
+                return NoContent();
+            }
+            catch (ArgumentNullException)
+            {
+                return BadRequest(new { message = "Place ID cannot be null" });
+            }
+            catch (EntityExistsException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidImageFormatException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (FileSizeExceededException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
         }
 
         [HttpDelete]
         public async Task<IActionResult> Delete([FromQuery] int id)
         {
-            await _placeService.DeleteAsync(id);
-            return Ok();
+            try
+            {
+                await _placeService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (ArgumentNullException)
+            {
+                return BadRequest(new { message = "Place ID cannot be null" });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _placeService.GetAllAsync());
+            try
+            {
+                var places = await _placeService.GetAllAsync();
+                return Ok(places);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllPaginated([FromQuery] int currentPage, [FromQuery] int pageSize)
+        {
+            try
+            {
+                var response = await _placeService.GetAllPaginated(currentPage, pageSize);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            return Ok(await _placeService.GetByIdAsync(id));
+            try
+            {
+                var place = await _placeService.GetByIdAsync(id);
+                return Ok(place);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
         }
     }
 }

@@ -21,44 +21,96 @@ namespace Service
 
         public async Task CreateAsync(CategoryCreateDto model)
         {
-            if (await _categoryRepository.IsExist(model.Name))
+            try
             {
-                throw new EntityExistsException("Category");
-            }
+                if (await _categoryRepository.IsExist(model.Name))
+                {
+                    throw new EntityExistsException("Category");
+                }
 
-            await _categoryRepository.CreateAsync(_mapper.Map<Category>(model));
+                var category = _mapper.Map<Category>(model);
+                await _categoryRepository.CreateAsync(category);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while creating the category: {ex.Message}");
+            }
         }
 
         public async Task DeleteAsync(int? id)
         {
-            if (id is null) throw new ArgumentNullException();
+            try
+            {
+                if (id is null)
+                {
+                    throw new ArgumentNullException(nameof(id), "Category ID cannot be null.");
+                }
 
-            var category = await _categoryRepository.GetById((int)id);
+                var category = await _categoryRepository.GetById((int)id);
 
-            if (category is null) throw new NotFoundException("Category");
+                if (category is null)
+                {
+                    throw new NotFoundException("Category");
+                }
 
-            await _categoryRepository.DeleteAsync(category);
+                await _categoryRepository.DeleteAsync(category);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while deleting the category: {ex.Message}");
+            }
         }
 
         public async Task EditAsync(int? id, CategoryEditDto model)
         {
-            if (id is null) throw new ArgumentNullException();
+            try
+            {
+                if (id is null)
+                {
+                    throw new ArgumentNullException(nameof(id), "Category ID cannot be null.");
+                }
 
-            var category = await _categoryRepository.GetById((int)id);
+                var category = await _categoryRepository.GetById((int)id);
 
-            if (category is null) throw new NotFoundException("Category");
+                if (category is null)
+                {
+                    throw new NotFoundException("Category");
+                }
 
-            await _categoryRepository.EditAsync(_mapper.Map(model, category));
+                _mapper.Map(model, category);
+                await _categoryRepository.EditAsync(category);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while editing the category: {ex.Message}");
+            }
         }
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync()
         {
-            return _mapper.Map<IEnumerable<CategoryDto>>(await _categoryRepository.GetAllWithIncludes(m => m.Places));
+            try
+            {
+                var categories = await _categoryRepository.GetAllWithIncludes(m => m.Places);
+                return _mapper.Map<IEnumerable<CategoryDto>>(categories);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while retrieving categories: {ex.Message}");
+            }
         }
 
         public async Task<CategoryDto> GetByIdAsync(int id)
         {
-            return _mapper.Map<CategoryDto>(await _categoryRepository.GetByIdWithIncludes(m => m.Id == id, m => m.Places));
+            try
+            {
+                var category = await _categoryRepository.GetByIdWithIncludes(m => m.Id == id, m => m.Places);
+
+                return category == null ? throw new NotFoundException("Category") : _mapper.Map<CategoryDto>(category);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while retrieving the category: {ex.Message}");
+            }
         }
     }
 }

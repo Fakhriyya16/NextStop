@@ -210,6 +210,7 @@ namespace NextStop.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> UpdateProfile([FromQuery] string id, [FromBody] UserUpdateDto request)
         {
@@ -239,6 +240,7 @@ namespace NextStop.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> LogOut()
         {
@@ -253,6 +255,7 @@ namespace NextStop.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteAccount([FromBody] string userId)
         {
