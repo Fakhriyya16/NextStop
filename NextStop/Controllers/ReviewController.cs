@@ -29,7 +29,7 @@ namespace NextStop.Controllers
                 }
 
                 await _reviewService.CreateAsync(model, userId, placeId);
-                return CreatedAtAction(nameof(GetById), new { id = model.Id }, model);
+                return CreatedAtAction(nameof(GetById), model);
             }
             catch (ArgumentNullException ex)
             {

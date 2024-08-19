@@ -128,8 +128,7 @@ namespace NextStop.Controllers
             }
         }
 
-
-        [HttpPost("handle-cancellation")]
+        [HttpPost]
         public async Task<IActionResult> HandlePaymentCancellation([FromBody] PaymentIntent paymentIntent)
         {
             try
@@ -143,8 +142,7 @@ namespace NextStop.Controllers
             }
         }
 
-        [HttpPost("handle-failure")]
-        [AllowAnonymous] 
+        [HttpPost]
         public async Task<IActionResult> HandlePaymentFailure([FromBody] PaymentIntent paymentIntent)
         {
             try

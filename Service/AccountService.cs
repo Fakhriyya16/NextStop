@@ -22,6 +22,7 @@ namespace Service
         private readonly ISendEmail _sendEmail;
         private readonly ISubscriptionService _subscriptionService;
         private readonly string _baseUrl = "https://localhost:7264";
+        private readonly string _baseUiUrl = "http://localhost:3000";
 
         public AccountService(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, 
                               SignInManager<AppUser> signInManager, ITokenService tokenService, 
@@ -187,7 +188,7 @@ namespace Service
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var url = $"{_baseUrl}/api/account/resetpassword?email={HttpUtility.UrlEncode(email)}&token={HttpUtility.UrlEncode(token)}";
+            var url = $"{_baseUiUrl}/resetpassword?email={HttpUtility.UrlEncode(email)}&token={HttpUtility.UrlEncode(token)}";
 
             string messageBody;
             try

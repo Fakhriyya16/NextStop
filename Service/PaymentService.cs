@@ -1,5 +1,4 @@
-﻿
-using Domain.Entities;
+﻿using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Repository.Repositories.Interfaces;
@@ -8,6 +7,8 @@ using Service.DTOs.Payments;
 using Service.Helpers.Exceptions;
 using Service.Interfaces;
 using Stripe;
+using StripeSubscription = Stripe.Subscription;
+using DomainSubscription = Domain.Entities.Subscription;
 
 namespace Service
 {
@@ -25,7 +26,6 @@ namespace Service
             _paymentRepository = paymentRepository;
             _userManager = userManager;
             _subscriptionService = subscriptionService;
-
         }
 
         public async Task CreateAsync(Payment payment)
@@ -82,7 +82,7 @@ namespace Service
 
             await _subscriptionService.DeleteAsync(subscription.Id);
 
-            Domain.Entities.Subscription newSubscription = new()
+            DomainSubscription newSubscription = new()
             {
                 AppUserId = user.Id,
                 StartDate = DateTime.Now,

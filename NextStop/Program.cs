@@ -2,11 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using Repository.Data;
 using Service;
 using Repository;
-using System.Text.Json.Serialization;
+using NextStop.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
@@ -14,26 +13,35 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-   c.EnableAnnotations();
+    c.CustomSchemaIds(type =>
+    {
+        if (type.FullName.Contains("Stripe"))
+            return $"Stripe_{type.Name}";
+        if (type.FullName.Contains("Domain.Entities"))
+            return $"Domain_{type.Name}";
+
+        return type.Name; 
+    });
+
+    c.EnableAnnotations();
 });
 
-// Register DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-// Register repositories and services
 builder.Services.AddRepositoryLayer();
 builder.Services.AddServiceLayer(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();

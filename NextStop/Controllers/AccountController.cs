@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.Accounts;
 using Service.Helpers;
@@ -161,17 +160,17 @@ namespace NextStop.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ForgetPassword([FromBody] string email)
+        [HttpPost]
+        public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordDto request)
         {
-            if (string.IsNullOrWhiteSpace(email))
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Email is required.");
+                return BadRequest(ModelState);
             }
 
             try
             {
-                var response = await _accountService.ForgetPassword(email);
+                var response = await _accountService.ForgetPassword(request.Email);
                 if (response.StatusCode == (int)StatusCodes.Status404NotFound)
                 {
                     return NotFound(response.Message);
