@@ -38,7 +38,6 @@ namespace NextStop.Controllers
             }
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromForm] BlogCreateDto model)
         {

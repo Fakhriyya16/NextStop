@@ -1,4 +1,6 @@
 ﻿
+using Domain.Entities;
+
 namespace Service.DTOs.Places
 {
     public class PlaceDto
@@ -9,7 +11,7 @@ namespace Service.DTOs.Places
         public string Category { get; set; }
         public string Description { get; set; }
         public List<string> Images { get; set; }
-        public List<string>? Reviews { get; set; }
+        public List<Review>? Reviews { get; set; }
         public List<string> Tags { get; set; }
         public int Rating { get; set; }
     }

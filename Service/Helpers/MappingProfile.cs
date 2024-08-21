@@ -41,12 +41,15 @@ namespace Service.Helpers
             CreateMap<PlaceCreateDto, Place>().ForMember(dest => dest.Images, opt => opt.Ignore());
             CreateMap<PlaceEditDto, Place>();
             CreateMap<PaginationResponse<Place>, PaginateResponse<PlaceDto>>().ForMember(dest => dest.Data, opt => opt.Ignore());
-            CreateMap<Place, PlaceDto>().ForMember(dest => dest.City, opt => opt.MapFrom(m => m.City.Name))
-                                        .ForMember(dest => dest.Category, opt => opt.MapFrom(m => m.Category.Name))
-                                        .ForMember(dest => dest.Country, opt => opt.MapFrom(m => m.City.Country.Name))
-                                        .ForMember(dest => dest.Reviews, opt => opt.MapFrom(m => m.Reviews.Select(r => r.Comment).ToList()))
-                                        .ForMember(dest => dest.Images, opt => opt.MapFrom(m => m.Images.Select(i => i.ImageUrl).ToList()))
-                                        .ForMember(dest => dest.Tags, opt => opt.MapFrom(m => m.PlaceTags.Select(pt => pt.Tag.Name).ToList()));
+            CreateMap<Place, PlaceDto>()
+            .ForMember(dest => dest.City, opt => opt.MapFrom(m => m.City != null ? m.City.Name : null))
+            .ForMember(dest => dest.Category, opt => opt.MapFrom(m => m.Category != null ? m.Category.Name : null))
+            .ForMember(dest => dest.Country, opt => opt.MapFrom(m => m.City != null && m.City.Country != null ? m.City.Country.Name : null))
+            .ForMember(dest => dest.Reviews, opt => opt.Ignore())
+            .ForMember(dest => dest.Images, opt => opt.MapFrom(m => m.Images != null ? m.Images.Select(i => i.ImageUrl).ToList() : new List<string>()))
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(m => m.PlaceTags != null ? m.PlaceTags.Select(pt => pt.Tag.Name).ToList() : new List<string>()));
+
+
 
             CreateMap<RegisterDto, AppUser>();
             CreateMap<AppUser, UserDto>().ForMember(dest => dest.SubscriptionType, opt => opt.MapFrom(m => m.Subscription.SubscriptionType));

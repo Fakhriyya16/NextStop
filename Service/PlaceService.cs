@@ -49,13 +49,14 @@ namespace Service
 
             var countryName = await _cityRepository.GetCountryNameByCityId(city.Id);
 
-            if (!await _categoryRepository.IsExistById(model.CategoryId)) throw new NotFoundException("Category");
+            var category = await _categoryRepository.GetById(model.CategoryId) ?? throw new NotFoundException("Category");
 
             Place newPlace = _mapper.Map<Place>(model);
 
             var coordinates = await _geolocationService.GetCoordinatesAsync(newPlace.Name, city.Name, countryName);
             newPlace.Longitude = coordinates.Longitude;
             newPlace.Latitude = coordinates.Latitude;
+            newPlace.Category = category;
 
             foreach (var image in model.Images)
             {
@@ -122,7 +123,10 @@ namespace Service
 
             if (place is null) throw new NotFoundException("Place");
 
-            if (await _placeRepository.IsExist(model.Name)) throw new EntityExistsException("Place");
+            if(model.Name != place.Name)
+            {
+                if(await _placeRepository.IsExist(model.Name)) throw new EntityExistsException("Place");
+            }          
 
             if (!await _categoryRepository.IsExistById(model.CategoryId)) throw new NotFoundException("Category");
 
@@ -173,16 +177,19 @@ namespace Service
                 };
             }
 
+            _mapper.Map(model, place);
             await _placeRepository.EditAsync(place);
         }
 
         public async Task<IEnumerable<PlaceDto>> GetAllAsync()
         {
             var places = await _placeRepository.GetAllWithIncludes(m => m.PlaceTags, m => m.Category,
+                                                                   m => m.City,
                                                                    m => m.City.Country, m => m.Reviews,
                                                                    m => m.Images);
 
-            return _mapper.Map<IEnumerable<PlaceDto>>(places);
+            var placeDtos = _mapper.Map<IEnumerable<PlaceDto>>(places);
+            return placeDtos;
         }
 
         public async Task<PaginateResponse<PlaceDto>> GetAllPaginated(int currentPage, int pageSize)

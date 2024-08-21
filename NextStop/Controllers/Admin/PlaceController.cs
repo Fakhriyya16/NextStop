@@ -22,7 +22,7 @@ namespace NextStop.Controllers.Admin
             try
             {
                 await _placeService.CreateAsync(request);
-                return CreatedAtAction(nameof(GetById), request);
+                return Ok();
             }
             catch (EntityExistsException ex)
             {
@@ -118,7 +118,7 @@ namespace NextStop.Controllers.Admin
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllPaginated([FromQuery] int currentPage, [FromQuery] int pageSize)
+        public async Task<IActionResult> GetAllPaginated([FromQuery] int currentPage = 1, [FromQuery] int pageSize = 8)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace NextStop.Controllers.Admin
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
             }
         }
-
+          
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {

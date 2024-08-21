@@ -183,6 +183,7 @@ namespace Service
         {
             try
             {
+             
                 var response = await _blogRepository.GetPagination(currentPage, pageSize);
 
                 var result = new PaginateResponse<BlogDto>()

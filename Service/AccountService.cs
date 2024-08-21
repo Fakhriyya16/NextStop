@@ -106,7 +106,7 @@ namespace Service
             await _userManager.AddToRoleAsync(user, "Member");
 
             var confirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmationLink = $"{_baseUrl}/api/account/confirmemail?userId={HttpUtility.UrlEncode(user.Id)}&token={HttpUtility.UrlEncode(confirmToken)}";
+            var confirmationLink = $"{_baseUiUrl}/confirmemail?userId={HttpUtility.UrlEncode(user.Id)}&token={HttpUtility.UrlEncode(confirmToken)}";
 
             string messageBody;
             try
