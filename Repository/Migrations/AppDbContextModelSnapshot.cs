@@ -593,6 +593,28 @@ namespace Repository.Migrations
                     b.ToTable("Subscriptions");
                 });
 
+            modelBuilder.Entity("Domain.Entities.SubscriptionPrice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("MonthlyPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("SoftDelete")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubscriptionPrice");
+                });
+
             modelBuilder.Entity("Domain.Entities.Tag", b =>
                 {
                     b.Property<int>("Id")

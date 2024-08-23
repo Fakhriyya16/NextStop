@@ -34,17 +34,19 @@ namespace Service
 
             Review review = _mapper.Map<Review>(model);
 
-            review.AppUser = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId) ?? throw new NotFoundException("User");
+            review.AppUser = user;
 
-            var place = await _placeRepository.GetById(placeId);
-            var rating = (place.Rating + model.Rating) / place.Reviews.Count;
-
-            place.Rating = rating;
-            await _placeRepository.EditAsync(place);
+            var place = await _placeRepository.GetByIdWithIncludes(m=>m.Id == placeId,m=>m.Reviews) ?? throw new NotFoundException("Place");
 
             review.Place = place;
 
             await _reviewRepository.CreateAsync(review);
+
+            var rating = (place.Rating + model.Rating) / place.Reviews.Count;
+
+            place.Rating = rating;
+            await _placeRepository.EditAsync(place);
         }
 
         public async Task DeleteAsync(int? id)
@@ -62,7 +64,10 @@ namespace Service
         {
             if (placeId is null) throw new ArgumentNullException();
 
-            return _mapper.Map<IEnumerable<ReviewDto>>(await _reviewRepository.GetAllForPlace((int)placeId));
+            var reviews = await _reviewRepository.GetAllForPlace((int)placeId);
+            var mappedReviews = _mapper.Map<IEnumerable<ReviewDto>>(reviews);
+
+            return mappedReviews;
         }
 
         public async Task<IEnumerable<ReviewDto>> GetAllForUser(string userId)
@@ -75,9 +80,9 @@ namespace Service
             return _mapper.Map<IEnumerable<ReviewDto>>(await _reviewRepository.GetAllForUser(userId));
         }
 
-        public async Task<PaginateResponse<ReviewDto>> GetAllPaginated(int currentPage, int pageSize)
+        public async Task<PaginateResponse<ReviewDto>> GetAllPaginated(int currentPage, int pageSize,int placeId)
         {
-            var response = await _reviewRepository.GetPagination(currentPage, pageSize);
+            var response = await _reviewRepository.GetPaginationForPlace(currentPage, pageSize,placeId);
 
             var result = new PaginateResponse<ReviewDto>()
             {

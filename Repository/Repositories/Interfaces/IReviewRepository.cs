@@ -1,9 +1,5 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Repository.Helpers;
 
 namespace Repository.Repositories.Interfaces
 {
@@ -11,5 +7,6 @@ namespace Repository.Repositories.Interfaces
     {
         Task<IEnumerable<Review>> GetAllForUser(string userId);
         Task<IEnumerable<Review>> GetAllForPlace(int placeId);
+        Task<PaginationResponse<Review>> GetPaginationForPlace(int currentPage, int pageSize, int placeId);
     }
 }

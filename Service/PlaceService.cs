@@ -1,10 +1,8 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.Entities;
-using Repository.Repositories;
 using Repository.Repositories.Interfaces;
-using Service.DTOs.Blogs;
 using Service.DTOs.Places;
+using Service.DTOs.Reviews;
 using Service.Helpers;
 using Service.Helpers.Exceptions;
 using Service.Helpers.Extensions;
@@ -23,12 +21,13 @@ namespace Service
         private readonly IGeolocationService _geolocationService;
         private readonly IPlaceTagRepository _placeTagRepository;
         private readonly IPlaceImageRepository _placeImageRepository;
+        private readonly IReviewService _reviewService;
 
         public PlaceService(IPlaceRepository placeRepository, IMapper mapper, 
                             ICityRepository cityRepository, ICategoryRepository categoryRepository, 
                             ITagRepository tagRepository, ICloudManagement cloudManagement,
                             IGeolocationService geolocationService, IPlaceTagRepository placeTagRepository,
-                            IPlaceImageRepository placeImageRepository)
+                            IPlaceImageRepository placeImageRepository, IReviewService reviewService)
         {
             _placeRepository = placeRepository;
             _mapper = mapper;
@@ -39,6 +38,7 @@ namespace Service
             _geolocationService = geolocationService;
             _placeTagRepository = placeTagRepository;
             _placeImageRepository = placeImageRepository;
+            _reviewService = reviewService;
         }
 
         public async Task CreateAsync(PlaceCreateDto model)
@@ -57,6 +57,7 @@ namespace Service
             newPlace.Longitude = coordinates.Longitude;
             newPlace.Latitude = coordinates.Latitude;
             newPlace.Category = category;
+            newPlace.Rating = 0;
 
             foreach (var image in model.Images)
             {
@@ -207,10 +208,13 @@ namespace Service
         public async Task<PlaceDto> GetByIdAsync(int id)
         {
             var place = await _placeRepository.GetByIdWithIncludes(m=>m.Id == id,m => m.PlaceTags, m => m.Category,
-                                                       m => m.City, m => m.Reviews,
+                                                       m => m.City,m=>m.City.Country, m => m.Reviews,
                                                        m => m.Images);
 
-            return _mapper.Map<PlaceDto>(place);
+            var mapperPlace = _mapper.Map<PlaceDto>(place);
+            mapperPlace.Reviews = _mapper.Map<List<ReviewDto>>(await _reviewService.GetAllForPlace(id));
+
+            return mapperPlace;
         }
     }
 }

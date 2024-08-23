@@ -15,6 +15,7 @@ namespace Domain.Configurations
             builder.Property(m => m.Description).IsRequired();
             builder.Property(m => m.Latitude).IsRequired();
             builder.Property(m => m.Longitude).IsRequired();
+            builder.Property(m => m.Rating).HasDefaultValue(0);
         }
     }
 }

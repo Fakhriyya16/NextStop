@@ -26,6 +26,7 @@ namespace Repository
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IFavoriteRepository, FavoriteRepository>();
             services.AddScoped<IItineraryPlaceRepository, ItineraryPlaceRepository>();
+            services.AddScoped<IPricingRepository, PricingRepository>();
 
 
             return services;

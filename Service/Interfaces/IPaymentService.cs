@@ -7,7 +7,7 @@ namespace Service.Interfaces
 {
     public interface IPaymentService
     {
-        Task<Payment> CreatePaymentAsync(PaymentIntentRequest request, string userId);
+        Task<PaymentIntent> CreatePaymentAsync(PaymentIntentRequest request, string userId);
         Task CreateAsync(Payment payment);
         Task ChangeSubscriptionType(string userId);
         Task<Payment> GetPaymentByUserId(string userId);

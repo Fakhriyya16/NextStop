@@ -13,7 +13,7 @@ namespace Service.DTOs.Reviews
     {
         public ReviewCreateDtoValidator()
         {
-            RuleFor(m=>m.Rating).NotEmpty().ExclusiveBetween(0,5);
+            RuleFor(m=>m.Rating).NotEmpty().InclusiveBetween(0,5);
             RuleFor(m => m.Comment).NotEmpty();
         }
     }

@@ -21,19 +21,27 @@ namespace Service
             _mapper = mapper;
         }
 
-        public async Task CreateAsync(Favorite favorite)
+        public async Task CreateAsync(FavoriteCreateDto favorite)
         {
-            await _favoriteRepository.CreateAsync(favorite);
+            var entity = _mapper.Map<Favorite>(favorite);
+            await _favoriteRepository.CreateAsync(entity);
         }
 
-        public async Task DeleteAsync(int? id)
+        public async Task<bool> IsFavoriteAsync(string userId, int placeId)
         {
-            if (id is null) throw new ArgumentNullException();
+            var favorite = await _favoriteRepository.IsFavorite(f => f.AppUserId == userId && f.PlaceId == placeId);
+            return favorite != null;
+        }
 
-            var favorite = await _favoriteRepository.GetById((int)id);
+        public async Task<Favorite> GetByUserAndPlaceId(string userId,int placeId)
+        {
+            return await _favoriteRepository.IsFavorite(f => f.AppUserId == userId && f.PlaceId == placeId);
+        }
 
+        public async Task DeleteAsync(string userId, int placeId)
+        {
+            var favorite = await GetByUserAndPlaceId(userId, placeId);
             if (favorite is null) throw new NotFoundException("Favorite");
-
             await _favoriteRepository.DeleteAsync(favorite);
         }
 
@@ -47,6 +55,18 @@ namespace Service
         public async Task<PaginateResponse<FavoriteDto>> GetAllPaginated(int currentPage, int pageSize)
         {
             var response = await _favoriteRepository.GetPagination(currentPage, pageSize);
+
+            var result = new PaginateResponse<FavoriteDto>()
+            {
+                Data = _mapper.Map<List<FavoriteDto>>(response.Data),
+            };
+
+            return _mapper.Map(response, result);
+        }
+
+        public async Task<PaginateResponse<FavoriteDto>> GetAllPaginatedForUser(int currentPage, int pageSize,string userId)
+        {
+            var response = await _favoriteRepository.GetPaginationForUser(currentPage, pageSize,userId);
 
             var result = new PaginateResponse<FavoriteDto>()
             {

@@ -18,14 +18,17 @@ namespace Service
         private readonly IPaymentRepository _paymentRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly ISubscriptionService _subscriptionService;
+        private readonly IPricingService _pricingService;
 
         public PaymentService(IOptions<StripeSettings> stripeSettings,IPaymentRepository paymentRepository,
-                              UserManager<AppUser> userManager, ISubscriptionService subscriptionService)
+                              UserManager<AppUser> userManager, ISubscriptionService subscriptionService, IPricingService pricingService)
         {
             _stripeSettings = stripeSettings;
             _paymentRepository = paymentRepository;
             _userManager = userManager;
             _subscriptionService = subscriptionService;
+            _pricingService = pricingService;
+
         }
 
         public async Task CreateAsync(Payment payment)
@@ -33,11 +36,13 @@ namespace Service
             await _paymentRepository.CreateAsync(payment);
         }
 
-        public async Task<Payment> CreatePaymentAsync(PaymentIntentRequest request, string userId)
+        public async Task<PaymentIntent> CreatePaymentAsync(PaymentIntentRequest request, string userId)
         {
+            var price = await _pricingService.GetCurrentPriceAsync();
+
             var options = new PaymentIntentCreateOptions
             {
-                Amount = request.Amount,
+                Amount = (int)(price.MonthlyPrice * 100),
                 Currency = request.Currency,
                 Description = request.Description,
             };
@@ -49,14 +54,16 @@ namespace Service
             {
                 AppUserId = userId,
                 StripePaymentId = paymentIntent.Id,
-                Amount = request.Amount / 100m,  
+                Amount = price.MonthlyPrice,
                 Currency = request.Currency,
                 Status = paymentIntent.Status
             };
 
             await CreateAsync(payment);
 
-            return payment;
+            await ChangeSubscriptionType(userId);
+
+            return paymentIntent;
         }
 
         public async Task ChangeSubscriptionType(string userId)

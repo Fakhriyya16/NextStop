@@ -22,22 +22,22 @@ namespace NextStop.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePaymentIntent([FromBody] PaymentIntentRequest request)
         {
-            if (request == null || request.Amount <= 0 || string.IsNullOrWhiteSpace(request.Currency))
+            if (request == null || string.IsNullOrWhiteSpace(request.Currency))
             {
                 return BadRequest("Invalid payment intent request.");
             }
 
             try
             {
-                var userId = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 if (string.IsNullOrWhiteSpace(userId))
                 {
                     return Unauthorized("User ID not found.");
                 }
 
-                var payment = await _paymentService.CreatePaymentAsync(request, userId);
-                return Ok(new { ClientSecret = payment.StripePaymentId, Payment = payment });
+                PaymentIntent payment = await _paymentService.CreatePaymentAsync(request,userId);
+                return Ok(new { ClientSecret = payment.ClientSecret });
             }
             catch (Exception ex)
             {

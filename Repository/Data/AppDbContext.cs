@@ -27,6 +27,7 @@ namespace Repository.Data
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<BlogImage> BlogImages { get; set; }
+        public DbSet<SubscriptionPrice> SubscriptionPrice { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -47,6 +48,7 @@ namespace Repository.Data
             builder.Entity<ItineraryDay>().HasQueryFilter(m => !m.SoftDelete);
             builder.Entity<Review>().HasQueryFilter(m => !m.SoftDelete);
             builder.Entity<Payment>().HasQueryFilter(m => !m.SoftDelete);
+            builder.Entity<SubscriptionPrice>().HasQueryFilter(m => !m.SoftDelete);
 
 
             base.OnModelCreating(builder);

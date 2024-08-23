@@ -16,6 +16,20 @@ namespace NextStop.Controllers
             _reviewService = reviewService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllPaginated([FromQuery] int currentPage, [FromQuery] int pageSize, [FromQuery] int placeId)
+        {
+            try
+            {
+                var response = await _reviewService.GetAllPaginated(currentPage, pageSize, placeId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Create([FromBody] ReviewCreateDto model, [FromQuery] int placeId)
@@ -29,7 +43,7 @@ namespace NextStop.Controllers
                 }
 
                 await _reviewService.CreateAsync(model, userId, placeId);
-                return CreatedAtAction(nameof(GetById), model);
+                return Ok(new {Response = "Review created successfully"});
             }
             catch (ArgumentNullException ex)
             {

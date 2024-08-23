@@ -44,6 +44,7 @@ namespace Service
             services.AddScoped<IItineraryService, ItineraryService>();
             services.AddScoped<IFavoriteService, FavoriteService>();
             services.AddScoped<IReviewService, ReviewService>();
+            services.AddScoped<IPricingService, PricingService>();
 
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
 

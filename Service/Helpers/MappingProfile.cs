@@ -1,5 +1,4 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.Entities;
 using Repository.Helpers;
 using Service.DTOs.Accounts;
@@ -11,7 +10,7 @@ using Service.DTOs.Favorites;
 using Service.DTOs.Places;
 using Service.DTOs.Reviews;
 using Service.DTOs.Tags;
-using System.ComponentModel.Design;
+
 
 namespace Service.Helpers
 {
@@ -58,6 +57,7 @@ namespace Service.Helpers
             CreateMap<AppUser, UserDetailDto>().ForMember(dest => dest.Reviews, opt => opt.MapFrom(m=>m.Reviews.Select(m=>m.Comment).ToList()))
                                                .ForMember(dest => dest.Blogs, opt => opt.MapFrom(m=>m.Blogs.Select(m=>m.Title).ToList()))
                                                .ForMember(dest => dest.Favorites, opt => opt.MapFrom(m=>m.Favorites.Select(m=>m.Place.Name).ToList()))
+                                               .ForMember(dest => dest.AppUserId, opt => opt.MapFrom(m=>m.Id))
                                                .ForMember(dest => dest.SubscriptionType, opt => opt.Ignore());
 
             CreateMap<AppUser, UserDto>().ForMember(dest => dest.SubscriptionType, opt => opt.MapFrom(m => m.Subscription.SubscriptionType));
@@ -73,6 +73,8 @@ namespace Service.Helpers
                                              .ForMember(dest => dest.CityName, opt => opt.MapFrom(m => m.Place.City.Name))
                                              .ForMember(dest => dest.CountryName, opt => opt.MapFrom(m => m.Place.City.Country.Name))
                                              .ForMember(dest => dest.MainImage, opt => opt.MapFrom(m => m.Place.Images.FirstOrDefault().ImageUrl));
+            CreateMap<FavoriteCreateDto, Favorite>();
+
             CreateMap<PaginationResponse<Favorite>, PaginateResponse<FavoriteDto>>().ForMember(dest => dest.Data, opt => opt.Ignore());
 
             CreateMap<Review, ReviewDto>().ForMember(dest => dest.User, opt => opt.MapFrom(m => m.AppUser.Name + " " + m.AppUser.Surname))
