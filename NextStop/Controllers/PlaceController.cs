@@ -16,6 +16,76 @@ namespace NextStop.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> SortBy([FromQuery] string property, [FromQuery] string order, [FromQuery] int currentPage, [FromQuery] int pageSize)
+        {
+            try
+            {
+                var places = await _placeService.SortBy(property, order,currentPage,pageSize);
+                return Ok(places);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchByName([FromQuery] string searchText, [FromQuery] int currentPage, [FromQuery] int pageSize)
+        {
+            try
+            {
+                var places = await _placeService.SearchByName(searchText, currentPage, pageSize);
+                return Ok(places);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FilterByCategory([FromQuery] string category, [FromQuery] int currentPage, [FromQuery] int pageSize)
+        {
+            try
+            {
+                var places = await _placeService.FilterByCategory(category, currentPage, pageSize);
+                return Ok(places);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FilterByCity([FromQuery] string city, [FromQuery] int currentPage, [FromQuery] int pageSize)
+        {
+            try
+            {
+                var places = await _placeService.FilterByCity(city, currentPage, pageSize);
+                return Ok(places);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FilterByTag([FromQuery] string tag, [FromQuery] int currentPage, [FromQuery] int pageSize)
+        {
+            try
+            {
+                var places = await _placeService.FilterByTag(tag, currentPage, pageSize);
+                return Ok(places);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -30,7 +100,6 @@ namespace NextStop.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous] 
         public async Task<IActionResult> GetAllPaginated([FromQuery] int currentPage, [FromQuery] int pageSize)
         {
             try

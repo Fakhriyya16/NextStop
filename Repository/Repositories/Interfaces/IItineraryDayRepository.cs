@@ -9,5 +9,6 @@ namespace Repository.Repositories.Interfaces
 {
     public interface IItineraryDayRepository : IBaseRepository<ItineraryDay>
     {
+        Task<IEnumerable<ItineraryDay>> GetAllByItineraryId(int itineraryId);
     }
 }

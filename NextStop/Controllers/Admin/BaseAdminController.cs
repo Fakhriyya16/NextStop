@@ -6,6 +6,7 @@ namespace NextStop.Controllers.Admin
 {
     [Route("api/admin/[controller]/[action]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class BaseAdminController : ControllerBase
     {
     }

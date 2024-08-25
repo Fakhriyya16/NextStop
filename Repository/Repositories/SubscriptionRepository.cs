@@ -16,6 +16,12 @@ namespace Repository.Repositories
         {
         }
 
+        public async Task DeleteFromDatabase(Subscription subscription)
+        {
+             _entities.Remove(subscription);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Subscription> GetByUserId(string userId)
         {
             return await _entities.FirstOrDefaultAsync(m => m.AppUserId == userId);

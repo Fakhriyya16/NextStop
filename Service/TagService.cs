@@ -59,6 +59,13 @@ namespace Service
             return _mapper.Map<IEnumerable<TagDto>>(tags);
         }
 
+        public async Task<IEnumerable<TagNameDto>> GetAllNames()
+        {
+            var tags = await _tagRepository.GetAllAsync();
+
+            return _mapper.Map<IEnumerable<TagNameDto>>(tags);
+        }
+
         public async Task<TagDto> GetByIdAsync(int id)
         {
             return _mapper.Map<TagDto>(await _tagRepository.GetByIdWithIncludes(m => m.Id == id, m => m.PlaceTags));

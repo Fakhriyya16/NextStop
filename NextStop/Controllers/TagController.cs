@@ -45,5 +45,19 @@ namespace NextStop.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllNames()
+        {
+            try
+            {
+                var tags = await _tagService.GetAllNames();
+                return Ok(tags);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ using Service.DTOs.Categories;
 using Service.DTOs.Cities;
 using Service.DTOs.Countries;
 using Service.DTOs.Favorites;
+using Service.DTOs.Itineraries;
 using Service.DTOs.Places;
 using Service.DTOs.Reviews;
 using Service.DTOs.Tags;
@@ -18,20 +19,23 @@ namespace Service.Helpers
     {
         public MappingProfile()
         {
-            CreateMap<Country, CountryDto>().ForMember(dest => dest.Cities, opt => opt.MapFrom(m => m.Cities.Select(m => m.Name).ToList()));
+            CreateMap<Country, CountryDto>().ForMember(dest => dest.Cities, opt => opt.MapFrom(m=>m.Cities.Select(m=>m.Name).ToList()));
             CreateMap<CountryCreateDto, Country>();
             CreateMap<CountryEditDto, Country>();
 
             CreateMap<City, CityDto>().ForMember(dest => dest.Country, opt => opt.MapFrom(m => m.Country.Name))
                                       .ForMember(dest => dest.Places, opt => opt.MapFrom(m=>m.Places.Select(m=>m.Name).ToList()));
             CreateMap<CityCreateDto, City>();
-            CreateMap<CityEditDto, City>();
+            CreateMap<CityEditDto, City>().ForMember(dest => dest.Country, opt=> opt.Ignore());
+            CreateMap<City, CityNameDto>();
 
             CreateMap<CategoryCreateDto, Category>();
+            CreateMap<Category, CategoryNameDto>();
             CreateMap<CategoryEditDto, Category>();
             CreateMap<Category, CategoryDto>().ForMember(dest => dest.Places,opt => opt.MapFrom(m=>m.Places.Select(m=>m.Name).ToList()));
 
             CreateMap<TagCreateDto, Tag>();
+            CreateMap<Tag, TagNameDto>();
             CreateMap<TagEditDto, Tag>();
             CreateMap<Tag, TagDto>()
                  .ForMember(dest => dest.Places, opt => opt.MapFrom(src => src.PlaceTags.Select(pt => pt.Place).ToList()));
@@ -51,7 +55,7 @@ namespace Service.Helpers
 
 
             CreateMap<RegisterDto, AppUser>();
-            CreateMap<AppUser, UserDto>().ForMember(dest => dest.SubscriptionType, opt => opt.MapFrom(m => m.Subscription.SubscriptionType));
+            CreateMap<AppUser, UserDto>().ForMember(dest => dest.Roles, opt => opt.Ignore());
             CreateMap<LoginDto, AppUser>();
             CreateMap<UserUpdateDto, AppUser>();
             CreateMap<AppUser, UserDetailDto>().ForMember(dest => dest.Reviews, opt => opt.MapFrom(m=>m.Reviews.Select(m=>m.Comment).ToList()))
@@ -59,8 +63,6 @@ namespace Service.Helpers
                                                .ForMember(dest => dest.Favorites, opt => opt.MapFrom(m=>m.Favorites.Select(m=>m.Place.Name).ToList()))
                                                .ForMember(dest => dest.AppUserId, opt => opt.MapFrom(m=>m.Id))
                                                .ForMember(dest => dest.SubscriptionType, opt => opt.Ignore());
-
-            CreateMap<AppUser, UserDto>().ForMember(dest => dest.SubscriptionType, opt => opt.MapFrom(m => m.Subscription.SubscriptionType));
 
             CreateMap<Blog, BlogDto>().ForMember(dest => dest.PublishDate, opt => opt.MapFrom(m=>m.CreatedDate.ToString("dd.MM.yyyy")))
                                       .ForMember(dest => dest.Author, opt => opt.MapFrom(m=>m.AppUser.Name + " " + m.AppUser.Surname))
@@ -82,6 +84,17 @@ namespace Service.Helpers
                                          .ForMember(dest => dest.ReviewDate, opt => opt.MapFrom(m => m.ReviewDate.ToString("dddd, dd MMMM yyyy")));
             CreateMap<ReviewCreateDto, Review>();
             CreateMap<PaginationResponse<Review>, PaginateResponse<ReviewDto>>().ForMember(dest => dest.Data, opt => opt.Ignore());
+
+            CreateMap<Itinerary, ItineraryResponseDto>()
+                        .ForMember(dest => dest.ItineraryDays, opt => opt.MapFrom(src => src.ItineraryDays));
+
+            CreateMap<ItineraryDay, ItineraryDayDto>()
+                .ForMember(dest => dest.ItineraryPlaces, opt => opt.MapFrom(src => src.ItineraryPlaces));
+
+            CreateMap<ItineraryPlace, ItineraryPlaceDto>().ForMember(dest => dest.PlaceName,opt => opt.MapFrom(m=>m.Place.Name))
+                                                          .ForMember(dest => dest.Category,opt => opt.MapFrom(m=>m.Place.Category.Name))
+                                                          .ForMember(dest => dest.Latitude,opt => opt.MapFrom(m=>m.Place.Latitude))
+                                                          .ForMember(dest => dest.Longitude,opt => opt.MapFrom(m=>m.Place.Longitude));
         }
     }
 }

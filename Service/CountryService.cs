@@ -12,11 +12,13 @@ namespace Service
     {
         private readonly ICountryRepository _countryRepository;
         private readonly IMapper _mapper;
+        private readonly ICityRepository _cityRepository;
 
-        public CountryService(ICountryRepository countryRepository, IMapper mapper)
+        public CountryService(ICountryRepository countryRepository, IMapper mapper, ICityRepository cityRepository)
         {
             _countryRepository = countryRepository;
             _mapper = mapper;
+            _cityRepository = cityRepository;
         }
 
         public async Task CreateAsync(CountryCreateDto model)
@@ -30,7 +32,12 @@ namespace Service
         {
             if (id is null) throw new ArgumentNullException();
 
-            var country = await _countryRepository.GetById((int)id);
+            var country = await _countryRepository.GetByIdWithIncludes(m=>m.Id == id,m=>m.Cities);
+
+            foreach (var city in country.Cities)
+            {
+                await _cityRepository.DeleteAsync(city);
+            }
 
             if (country is null) throw new NotFoundException("Country was not found");
 
@@ -45,7 +52,7 @@ namespace Service
 
             if (country is null) throw new NotFoundException("Country was not found");
 
-            if (await _countryRepository.FindByName(model.Name) is null) throw new EntityExistsException("Country");
+            if (await _countryRepository.FindByName(model.Name) is not null) throw new EntityExistsException("Country");
 
             _mapper.Map(model,country);
 

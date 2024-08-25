@@ -31,25 +31,16 @@ namespace Repository.Repositories
         {
             var totalCount = await _entities.AsNoTracking().CountAsync();
 
-            int pageCount = (int)Math.Ceiling((double)(totalCount / pageSize));
+            int pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
 
             var data = await _entities.AsNoTracking().OrderBy(m => m.Id).Include(m => m.Category)
-                                      .Include(m => m.City).Include(m => m.Reviews).Include(m => m.PlaceTags)
-                                      .Include(m => m.Images)
+                                      .Include(m => m.City).Include(m => m.Reviews).Include(m => m.Images)
+                                      .Include(m => m.PlaceTags).ThenInclude(m=>m.Tag)
                                       .Skip((currentPage - 1) * pageSize)
                                       .Take(pageSize).ToListAsync();
 
-            bool hasNext = true;
-            bool hasPrevious = true;
-
-            if (currentPage == 1)
-            {
-                hasPrevious = false;
-            }
-            if (currentPage == pageCount)
-            {
-                hasNext = false;
-            }
+            bool hasNext = currentPage < pageCount;
+            bool hasPrevious = currentPage > 1;
 
             var response = new PaginationResponse<Place>()
             {
@@ -65,64 +56,198 @@ namespace Repository.Repositories
             return response;
         }
 
-        public async Task<IEnumerable<Place>> SortBy(string property, string order)
+        public async Task<PaginationResponse<Place>> SortBy(string property, string order, int currentPage, int pageSize)
         {
-            var data = await _entities.Include(m => m.Category).Include(m => m.City)
-                                      .Include(m => m.Images).Include(m => m.PlaceTags)
-                                      .Include(m => m.Reviews).ToListAsync();
+            IQueryable<Place> query = _entities.AsNoTracking()
+                                      .Include(m => m.Category)
+                                      .Include(m => m.City)
+                                      .Include(m => m.Images)
+                                      .Include(m => m.PlaceTags);
 
-            switch (property)
+            switch (property.ToLower())
             {
                 case "date":
-                    if (order == "desc")
-                    {
-                        return data.OrderByDescending(m => m.CreatedDate);
-                    }
-                    else if (order == "asc")
-                    {
-                        return data.OrderBy(m => m.CreatedDate);
-                    }
-                    else
-                    {
-                        return data;
-                    }
+                    query = order.ToLower() == "desc"
+                        ? query.OrderByDescending(m => m.CreatedDate)
+                        : query.OrderBy(m => m.CreatedDate);
+                    break;
+
                 case "rating":
-                    if (order == "desc")
-                    {
-                        return data.OrderByDescending(m => m.Rating);
-                    }
-                    else if (order == "asc")
-                    {
-                        return data.OrderBy(m => m.Rating);
-                    }
-                    else
-                    {
-                        return data;
-                    }
+                    query = order.ToLower() == "desc"
+                        ? query.OrderByDescending(m => m.Rating)
+                        : query.OrderBy(m => m.Rating);
+                    break;
+
                 default:
-                    return data;
+                    query = query.OrderBy(m => m.Id);
+                    break;
             }
-        }
 
-        public async Task<IEnumerable<Place>> SearchByName(string searchText)
-        {
-            return await _entities.Where(m => m.Name.Contains(searchText)).ToListAsync();
-        }
+            var totalCount = await query.CountAsync();
 
-        public async Task<IEnumerable<Place>> FilterByCategory(string category)
-        {
-            return await _entities.Where(m => m.Category.Name == category).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Place>> FilterByCity(string city)
-        {
-            return await _entities.Where(m => m.City.Name == city).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Place>> FilterByTag(string tag)
-        {
-            return await _entities.Where(m => m.PlaceTags.Any(pt => pt.Tag.Name == tag))
+            var data = await query.Skip((currentPage - 1) * pageSize)
+                                  .Take(pageSize)
                                   .ToListAsync();
+
+            int pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
+            bool hasNext = currentPage < pageCount;
+            bool hasPrevious = currentPage > 1;
+
+            var response = new PaginationResponse<Place>()
+            {
+                Data = data,
+                TotalCount = totalCount,
+                CurrentPage = currentPage,
+                PageCount = pageCount,
+                PageSize = pageSize,
+                HasNext = hasNext,
+                HasPrevious = hasPrevious,
+            };
+
+            return response;
+        }
+
+        public async Task<PaginationResponse<Place>> SearchByName(string searchText, int currentPage, int pageSize)
+        {
+            var query = _entities.AsNoTracking()
+                                     .Where(m => m.Name.Contains(searchText))
+                                     .Include(m => m.Category)
+                                     .Include(m => m.City)
+                                     .Include(m => m.Images)
+                                     .Include(m => m.PlaceTags)
+                                     .ThenInclude(pt => pt.Tag);
+
+            var totalCount = await query.CountAsync();
+
+            var data = await query.Skip((currentPage - 1) * pageSize)
+                                  .Take(pageSize)
+                                  .ToListAsync();
+
+            int pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
+            bool hasNext = currentPage < pageCount;
+            bool hasPrevious = currentPage > 1;
+
+            var response = new PaginationResponse<Place>()
+            {
+                Data = data,
+                TotalCount = totalCount,
+                CurrentPage = currentPage,
+                PageCount = pageCount,
+                PageSize = pageSize,
+                HasNext = hasNext,
+                HasPrevious = hasPrevious,
+            };
+
+            return response;
+        }
+
+        public async Task<PaginationResponse<Place>> FilterByCategory(string category, int currentPage, int pageSize)
+        {
+            var totalCount = await _entities.AsNoTracking()
+                                            .Where(m => m.Category.Name == category)
+                                            .CountAsync();
+
+            var data = await _entities.AsNoTracking()
+                                      .Where(m => m.Category.Name == category)
+                                      .OrderBy(m => m.Id)
+                                      .Include(m => m.Category)
+                                      .Include(m => m.City)
+                                      .Include(m => m.Images)
+                                      .Include(m => m.PlaceTags)
+                                      .ThenInclude(m => m.Tag)
+                                      .Skip((currentPage - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToListAsync();
+
+            int pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
+
+            bool hasNext = currentPage < pageCount;
+            bool hasPrevious = currentPage > 1;
+
+            var response = new PaginationResponse<Place>()
+            {
+                Data = data,
+                TotalCount = totalCount,
+                CurrentPage = currentPage,
+                PageCount = pageCount,
+                PageSize = pageSize,
+                HasNext = hasNext,
+                HasPrevious = hasPrevious,
+            };
+
+            return response;
+        }
+
+        public async Task<PaginationResponse<Place>> FilterByCity(string city, int currentPage, int pageSize)
+        {
+            var totalCount = await _entities.AsNoTracking()
+                                            .Where(m => m.City.Name == city)
+                                            .CountAsync();
+
+            var data = await _entities.AsNoTracking()
+                                      .Where(m => m.City.Name == city)
+                                      .OrderBy(m => m.Id)
+                                      .Include(m => m.Category)
+                                      .Include(m => m.City)
+                                      .Include(m => m.Images)
+                                      .Include(m => m.PlaceTags)
+                                      .ThenInclude(m => m.Tag)
+                                      .Skip((currentPage - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToListAsync();
+
+            int pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
+            bool hasNext = currentPage < pageCount;
+            bool hasPrevious = currentPage > 1;
+
+            var response = new PaginationResponse<Place>()
+            {
+                Data = data,
+                TotalCount = totalCount,
+                CurrentPage = currentPage,
+                PageCount = pageCount,
+                PageSize = pageSize,
+                HasNext = hasNext,
+                HasPrevious = hasPrevious,
+            };
+
+            return response;
+        }
+
+        public async Task<PaginationResponse<Place>> FilterByTag(string tag, int currentPage, int pageSize)
+        {
+            var totalCount = await _entities.AsNoTracking()
+                                                .Where(m => m.PlaceTags.Any(pt => pt.Tag.Name == tag))
+                                                .CountAsync();
+
+            var data = await _entities.AsNoTracking()
+                                      .Where(m => m.PlaceTags.Any(pt => pt.Tag.Name == tag))
+                                      .OrderBy(m => m.Id)
+                                      .Include(m => m.Category)
+                                      .Include(m => m.City)
+                                      .Include(m => m.Images)
+                                      .Include(m => m.PlaceTags)
+                                      .ThenInclude(m => m.Tag)
+                                      .Skip((currentPage - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToListAsync();
+
+            int pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
+            bool hasNext = currentPage < pageCount;
+            bool hasPrevious = currentPage > 1;
+
+            var response = new PaginationResponse<Place>()
+            {
+                Data = data,
+                TotalCount = totalCount,
+                CurrentPage = currentPage,
+                PageCount = pageCount,
+                PageSize = pageSize,
+                HasNext = hasNext,
+                HasPrevious = hasPrevious,
+            };
+
+            return response;
         }
     }
 }

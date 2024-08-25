@@ -27,6 +27,20 @@ namespace NextStop.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllNames()
+        {
+            try
+            {
+                var cities = await _cityService.GetAllNamesAsync();
+                return Ok(cities);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
@@ -34,6 +48,24 @@ namespace NextStop.Controllers
             {
                 var city = await _cityService.GetByIdAsync(id);
                 return Ok(city);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("{name}")]
+        public async Task<IActionResult> GetByName([FromRoute] string name)
+        {
+            try
+            {
+                var result = await _cityService.GetByName(name);
+                return Ok(result);
             }
             catch (NotFoundException ex)
             {

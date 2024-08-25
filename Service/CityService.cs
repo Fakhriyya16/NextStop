@@ -80,10 +80,7 @@ namespace Service
 
             if (city is null) throw new NotFoundException("City was not found");
 
-            if (await _countryRepository.FindByName(model.Country) is null)
-            {
-                throw new NotFoundException("Country was not found");
-            }
+            var country = await _countryRepository.FindByName(model.Country) ?? throw new NotFoundException("Country was not found");
 
             if (model.Image is not null)
             {
@@ -107,7 +104,10 @@ namespace Service
                 }
             }
 
-            await _cityRepository.EditAsync(_mapper.Map(model, city));
+            var editedCity = _mapper.Map(model, city);
+            editedCity.Country = country;
+
+            await _cityRepository.EditAsync(editedCity);
         }
 
         public async Task<IEnumerable<CityDto>> GetAllAsync()
@@ -116,9 +116,20 @@ namespace Service
             return _mapper.Map<IEnumerable<CityDto>>(cities);
         }
 
+        public async Task<IEnumerable<CityNameDto>> GetAllNamesAsync()
+        {
+            var cities = await _cityRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<CityNameDto>>(cities);
+        }
+
         public async Task<CityDto> GetByIdAsync(int id)
         {
             return _mapper.Map<CityDto>(await _cityRepository.GetByIdWithIncludes(m=>m.Id == id,m => m.Places));
+        }
+
+        public async Task<CityDto> GetByName(string city)
+        {
+            return _mapper.Map<CityDto>(await _cityRepository.GetCityByName(city));
         }
     }
 }

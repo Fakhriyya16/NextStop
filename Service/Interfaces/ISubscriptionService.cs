@@ -9,5 +9,6 @@ namespace Service.Interfaces
         Task EditAsync(int? id,Subscription model);
         Task DeleteAsync(int? id);
         Task<Subscription> GetByUserId(string userId);
+        Task DeleteFromDatabase(Subscription subscription);
     }
 }

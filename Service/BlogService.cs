@@ -77,7 +77,7 @@ namespace Service
                 if (id is null)
                     throw new ArgumentNullException(nameof(id));
 
-                var blog = await _blogRepository.GetById((int)id);
+                var blog = await _blogRepository.GetByIdWithIncludes(m=>m.Id == id,m=>m.BlogImages);
 
                 if (blog is null)
                     throw new NotFoundException("Blog");

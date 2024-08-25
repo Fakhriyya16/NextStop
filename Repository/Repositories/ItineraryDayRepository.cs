@@ -1,11 +1,8 @@
 ﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Repository.Data;
 using Repository.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Repository.Repositories
 {
@@ -13,6 +10,11 @@ namespace Repository.Repositories
     {
         public ItineraryDayRepository(AppDbContext context) : base(context)
         {
+        }
+
+        public async Task<IEnumerable<ItineraryDay>> GetAllByItineraryId(int itineraryId)
+        {
+            return await _entities.Where(m=>m.ItineraryId ==  itineraryId).Include(m=>m.ItineraryPlaces).ThenInclude(m=>m.Place).ThenInclude(m=>m.Category).ToListAsync();
         }
     }
 }

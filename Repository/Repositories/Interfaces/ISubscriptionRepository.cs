@@ -10,5 +10,6 @@ namespace Repository.Repositories.Interfaces
     public interface ISubscriptionRepository : IBaseRepository<Subscription>
     {
         Task<Subscription> GetByUserId(string userId);
+        Task DeleteFromDatabase(Subscription subscription);
     }
 }

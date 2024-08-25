@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.Accounts;
 using Service.Helpers;
+using Service.Helpers.Exceptions;
 using Service.Interfaces;
 using System.Security.Claims;
 
@@ -14,6 +15,34 @@ namespace NextStop.Controllers
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetUsersDetails([FromQuery] string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return BadRequest("User ID is required.");
+            }
+
+            try
+            {
+                var userDetail = await _accountService.GetUserById(id);
+                return Ok(userDetail);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
+            }
         }
 
         [HttpGet]
@@ -256,7 +285,7 @@ namespace NextStop.Controllers
 
         [Authorize]
         [HttpDelete]
-        public async Task<IActionResult> DeleteAccount([FromBody] string userId)
+        public async Task<IActionResult> DeleteAccount([FromQuery] string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
             {

@@ -21,7 +21,7 @@ namespace NextStop.Controllers.Admin
         //}
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAccount([FromBody] string userId)
+        public async Task<IActionResult> DeleteAccount([FromQuery] string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
             {
@@ -45,7 +45,7 @@ namespace NextStop.Controllers.Admin
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
@@ -68,7 +68,7 @@ namespace NextStop.Controllers.Admin
             }
         }
 
-            [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
             try
@@ -83,7 +83,7 @@ namespace NextStop.Controllers.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRoleToUser(string userId, [FromBody] string role)
+        public async Task<IActionResult> AddRoleToUser([FromQuery]string userId, [FromQuery] string role)
         {
             if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(role))
             {
@@ -112,8 +112,8 @@ namespace NextStop.Controllers.Admin
             }
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> RemoveRoleFromUser(string userId, [FromBody] string role)
+        [HttpPost]
+        public async Task<IActionResult> RemoveRoleFromUser([FromQuery]string userId, [FromQuery] string role)
         {
             if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(role))
             {

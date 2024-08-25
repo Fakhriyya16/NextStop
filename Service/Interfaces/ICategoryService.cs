@@ -11,5 +11,6 @@ namespace Service.Interfaces
         Task EditAsync(int? id, CategoryEditDto model);
         Task<CategoryDto> GetByIdAsync(int id);
         Task<IEnumerable<CategoryDto>> GetAllAsync();
+        Task<IEnumerable<CategoryNameDto>> GetAllNamesAsync();
     }
 }

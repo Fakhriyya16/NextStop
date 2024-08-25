@@ -117,7 +117,6 @@ namespace NextStop.Controllers.Admin
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> GetAllPaginated([FromQuery] int currentPage = 1, [FromQuery] int pageSize = 8)
         {
             try

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Repository.Helpers;
 using Repository.Repositories.Interfaces;
 using Service.DTOs.Places;
 using Service.DTOs.Reviews;
@@ -7,6 +8,7 @@ using Service.Helpers;
 using Service.Helpers.Exceptions;
 using Service.Helpers.Extensions;
 using Service.Interfaces;
+using System.Collections.Generic;
 
 namespace Service
 {
@@ -175,11 +177,48 @@ namespace Service
                         TagId = tagId,
                         PlaceId = place.Id
                     };
+                    await _placeTagRepository.CreateAsync(placeTag);
                 };
             }
 
             _mapper.Map(model, place);
             await _placeRepository.EditAsync(place);
+        }
+
+        public async Task<PaginateResponse<PlaceDto>> FilterByCategory(string category, int currentPage, int pageSize)
+        {
+            var response = await _placeRepository.FilterByCategory(category,currentPage, pageSize);
+
+            var result = new PaginateResponse<PlaceDto>()
+            {
+                Data = _mapper.Map<List<PlaceDto>>(response.Data),
+            };
+
+            return _mapper.Map(response, result);
+        }
+
+        public async Task<PaginateResponse<PlaceDto>> FilterByCity(string city, int currentPage, int pageSize)
+        {
+            var response = await _placeRepository.FilterByCity(city, currentPage, pageSize);
+
+            var result = new PaginateResponse<PlaceDto>()
+            {
+                Data = _mapper.Map<List<PlaceDto>>(response.Data),
+            };
+
+            return _mapper.Map(response, result);
+        }
+
+        public async Task<PaginateResponse<PlaceDto>> FilterByTag(string tag, int currentPage, int pageSize)
+        {
+            var response = await _placeRepository.FilterByTag(tag, currentPage, pageSize);
+
+            var result = new PaginateResponse<PlaceDto>()
+            {
+                Data = _mapper.Map<List<PlaceDto>>(response.Data),
+            };
+
+            return _mapper.Map(response, result);
         }
 
         public async Task<IEnumerable<PlaceDto>> GetAllAsync()
@@ -215,6 +254,30 @@ namespace Service
             mapperPlace.Reviews = _mapper.Map<List<ReviewDto>>(await _reviewService.GetAllForPlace(id));
 
             return mapperPlace;
+        }
+
+        public async Task<PaginateResponse<PlaceDto>> SearchByName(string searchText, int currentPage, int pageSize)
+        {
+            var response = await _placeRepository.SearchByName(searchText, currentPage, pageSize);
+
+            var result = new PaginateResponse<PlaceDto>()
+            {
+                Data = _mapper.Map<List<PlaceDto>>(response.Data),
+            };
+
+            return _mapper.Map(response, result);
+        }
+
+        public async Task<PaginateResponse<PlaceDto>> SortBy(string property, string order, int currentPage, int pageSize)
+        {
+            var response = await _placeRepository.SortBy(property,order, currentPage, pageSize);
+
+            var result = new PaginateResponse<PlaceDto>()
+            {
+                Data = _mapper.Map<List<PlaceDto>>(response.Data),
+            };
+
+            return _mapper.Map(response, result);
         }
     }
 }

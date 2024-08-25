@@ -19,6 +19,19 @@ namespace Service
             _mapper = mapper;
         }
 
+        public async Task<IEnumerable<CategoryNameDto>> GetAllNamesAsync()
+        {
+            try
+            {
+                var categories = await _categoryRepository.GetAllAsync();
+                return _mapper.Map<IEnumerable<CategoryNameDto>>(categories);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while retrieving categories: {ex.Message}");
+            }
+        }
+
         public async Task CreateAsync(CategoryCreateDto model)
         {
             try

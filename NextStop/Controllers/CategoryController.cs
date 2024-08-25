@@ -32,6 +32,20 @@ namespace NextStop.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetAllNames()
+        {
+            try
+            {
+                var categories = await _categoryService.GetAllNamesAsync();
+                return Ok(categories);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             try

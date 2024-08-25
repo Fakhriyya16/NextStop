@@ -323,6 +323,10 @@ namespace Service
         public async Task<AccountManagementResponse> DeleteProfile(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
+            var subscription = await _subscriptionService.GetByUserId(userId);
+
+            await _subscriptionService.DeleteFromDatabase(subscription);
+
             if (user == null)
             {
                 return new AccountManagementResponse
@@ -473,6 +477,12 @@ namespace Service
                                          .Take(pageSize).ToListAsync();
 
             var mappedData = _mapper.Map<List<UserDto>>(data);
+
+            foreach (var u in mappedData)
+            {
+                var user = await _userManager.FindByIdAsync(u.Id);
+                u.Roles = (List<string>)await _userManager.GetRolesAsync(user);
+            }
 
             bool hasNext = true;
             bool hasPrevious = true;

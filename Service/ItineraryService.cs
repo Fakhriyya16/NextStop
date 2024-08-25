@@ -35,7 +35,7 @@ namespace Service
 
         public async Task<ItineraryResponseDto> GenerateItinerary(ItineraryRequestDto model, string userId)
         {
-            var city = await _cityRepository.GetCityByName(model.City) ?? throw new NotFoundException("City");
+            var city = await _cityRepository.GetById(model.CityId) ?? throw new NotFoundException("City");
             List<Category> categories = new();
             foreach (var categoryId in model.Categories)
             {
@@ -85,7 +85,7 @@ namespace Service
             var itinerary = new Itinerary
             {
                 AppUserId = userId,
-                Name = $"Itinerary for {model.City} - {model.NumberOfDays} days",
+                Name = $"Itinerary for {city.Name} - {model.NumberOfDays} days",
                 ItineraryDays = itineraryDays.Select(day => new ItineraryDay
                 {
                     DayNumber = day.DayNumber,
@@ -100,6 +100,7 @@ namespace Service
 
             return new ItineraryResponseDto
             {
+                Id = itinerary.Id,
                 Name = itinerary.Name,
                 ItineraryDays = itineraryDays
             };
@@ -125,6 +126,22 @@ namespace Service
             }
 
             return groupedPlaces;
+        }
+
+        public async Task<ItineraryResponseDto> GetById(int id)
+        {
+            var plan = await _itineraryRepository.GetByIdWithIncludes(
+                m => m.Id == id,
+                m => m.ItineraryDays,
+                m => m.AppUser);
+
+            var itineraryDays = await _itineraryDayRepository.GetAllByItineraryId(id);
+
+            var result = _mapper.Map<ItineraryResponseDto>(plan);
+
+            result.ItineraryDays = _mapper.Map<List<ItineraryDayDto>>(itineraryDays);
+
+            return result;
         }
     }
 }

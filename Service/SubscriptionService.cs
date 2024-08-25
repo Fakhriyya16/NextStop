@@ -30,6 +30,13 @@ namespace Service
             await _subscriptionRepository.DeleteAsync(subscription);
         }
 
+        public async Task DeleteFromDatabase(Subscription subscription)
+        {
+            if (subscription is null) throw new NotFoundException("Subscription");
+
+            await _subscriptionRepository.DeleteFromDatabase(subscription);
+        }
+
         public async Task EditAsync(int? id, Subscription model)
         {
             if (id is null) throw new ArgumentNullException();
