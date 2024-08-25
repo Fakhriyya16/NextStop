@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\VS\\NextStop\\NextStop\\wwwroot\\html\\ResetPassword.html",
+      "PackagePath": "staticwebassets\\html\\ResetPassword.html"
+    },
+    {
+      "Id": "D:\\VS\\NextStop\\NextStop\\wwwroot\\html\\VerifyEmail.html",
+      "PackagePath": "staticwebassets\\html\\VerifyEmail.html"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.NextStop.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.build.NextStop.props",
+      "PackagePath": "build\\NextStop.props"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.buildMultiTargeting.NextStop.props",
+      "PackagePath": "buildMultiTargeting\\NextStop.props"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.buildTransitive.NextStop.props",
+      "PackagePath": "buildTransitive\\NextStop.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

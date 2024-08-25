@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "6Zuym9BuS2w58MTXkeWenh4gyoswkv4b0teLlXoGe72uSZXNRCDx1Jkv+ixe29eaY7Q4ZLRnRkzUxWqokGncdQ==",
+  "dgSpecHash": "ckyoml2C8Fk+FpYt7MijfEzR1gYz6oXCUhaYGSdxdb2qkyj7AYMXDv1tfwk5uSOUAZbTobUxaLCJ73TVxoaV0w==",
   "success": true,
   "projectFilePath": "D:\\VS\\NextStop\\NextStop\\NextStop.csproj",
   "expectedPackageFiles": [
@@ -80,7 +80,7 @@
     "C:\\Users\\Faxriyya\\.nuget\\packages\\swashbuckle.aspnetcore.annotations\\6.6.2\\swashbuckle.aspnetcore.annotations.6.6.2.nupkg.sha512",
     "C:\\Users\\Faxriyya\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.6.2\\swashbuckle.aspnetcore.swagger.6.6.2.nupkg.sha512",
     "C:\\Users\\Faxriyya\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.6.2\\swashbuckle.aspnetcore.swaggergen.6.6.2.nupkg.sha512",
-    "C:\\Users\\Faxriyya\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.5.0\\swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512",
+    "C:\\Users\\Faxriyya\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.7.3\\swashbuckle.aspnetcore.swaggerui.6.7.3.nupkg.sha512",
     "C:\\Users\\Faxriyya\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
     "C:\\Users\\Faxriyya\\.nuget\\packages\\system.collections.concurrent\\4.3.0\\system.collections.concurrent.4.3.0.nupkg.sha512",
     "C:\\Users\\Faxriyya\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",
