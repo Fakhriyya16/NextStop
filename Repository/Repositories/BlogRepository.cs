@@ -50,7 +50,7 @@ namespace Repository.Repositories
         {
             var totalCount = await _entities.AsNoTracking().CountAsync();
 
-            int pageCount = (int)Math.Ceiling((double)(totalCount / pageSize));
+            int pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
 
             var data = await _entities.AsNoTracking().OrderBy(m => m.Id).Include(m => m.AppUser)
                                       .Include(m => m.BlogImages)
